@@ -1,9 +1,10 @@
+![GitHub repo size](https://img.shields.io/github/repo-size/MarlonAACN/eslint-plugin-tailwind-classname-order?style=flat-square)
 # eslint-plugin-tailwind-classname-order
 
 Sort tailwind classes for each element className list by a given order-config.
 
 - [1. Features](#features)
-- [2. Currently unsupported tailwind classes](#currently-unsupported-tailwind-classes)
+- [2. Currently unsupported tailwind classes](#currently-supported-tailwind-classes)
 - [3. Default order config](#default-order-config)
 - [4. Installation](#installation)
 - [5. Usage](#usage)
@@ -21,11 +22,46 @@ Sort tailwind classes for each element className list by a given order-config.
 ## Currently supported tailwind classes
 For the latest version the following tailwind classes are supported by the order plugin.
 Classes that are not yet included, will be treated as predefined custom classes.
+Classes are categorized as seen in the tailwind documentation [here](https://tailwindcss.com/docs)
+<br/>
 
-https://progress-bar.dev/<thepercentage>?title=<title>
-- Background Size (when using arbitrary values)
-- Border Color (when using arbitrary values)
-- Box Shadow Color
+![](https://progress-bar.dev/100/?title=Layout)
+![](https://progress-bar.dev/100/?title=Flexbox_Grid)
+![](https://progress-bar.dev/100/?title=Spacing)<br/>
+![](https://progress-bar.dev/100/?title=Sizing)
+![](https://progress-bar.dev/99/?title=Typography)
+![](https://progress-bar.dev/98/?title=Backgrounds)<br/>
+![](https://progress-bar.dev/98/?title=Borders)
+![](https://progress-bar.dev/99/?title=Effects)
+![](https://progress-bar.dev/100/?title=Filters)<br/>
+![](https://progress-bar.dev/100/?title=Tables)
+![](https://progress-bar.dev/100/?title=Transitions_Animations)
+![](https://progress-bar.dev/100/?title=Transformers)<br/>
+![](https://progress-bar.dev/100/?title=Interactivity)
+![](https://progress-bar.dev/98/?title=SVG)
+![](https://progress-bar.dev/100/?title=Accessibility)<br/>
+
+## Explicitly unsupported classes
+Some classes in tailwind have counterparts with the same name and since interpreting arbitrary values
+is not supported on the current version, they won't be detected properly.
+There are two major differences:
+1. The plugin doesn't support arbitrary values in any way for the certain class. Even when they're
+predefined in the tw config file, they won't be interpreted properly.
+2. The plugin can't interpret arbitrary values when they're added inline, but the plugin will be able
+to detect the proper class, when the value is predefined in the config.
+<br/>This Problem will presumably be fixed with a future version.
+
+- Font Family (inline)
+- Text Color (inline)
+- Text Decoration Color (inline)
+- Background Size (arbitrary generally)
+- Background Position (arbitrary generally)
+- Stroke Color (inline)
+- Border Color (inline)
+- Outline Color (inline)
+- Ring Color (inline)
+- Ring Offset Color (inline)
+- Box Shadow Color (inline)
 
 ## Default order config
 - predefined class
@@ -84,8 +120,8 @@ https://progress-bar.dev/<thepercentage>?title=<title>
 - place items
 - place content
 - place self
-- padding x
-- padding y
+- padding-x
+- padding-y
 - padding (top, right, bottom, left)
 - margin-x
 - margin-y
@@ -97,6 +133,7 @@ https://progress-bar.dev/<thepercentage>?title=<title>
 
 #### #object identity modification
 - transform (x, y, rotate, scale, skew)
+- transform origin
 
 #### #content behaviour
 - object fit
@@ -107,7 +144,7 @@ https://progress-bar.dev/<thepercentage>?title=<title>
 - break-before
 - break-after
 - break-inside
-- box-decoration-break
+- box decoration break
 
 #### #styling - content / text related
 - whitespace
@@ -115,33 +152,112 @@ https://progress-bar.dev/<thepercentage>?title=<title>
 #### #text styling
 - font-family
 - font-size
+- font smoothing
 - font-weight
 - font-style
-- tracking
-- leading
+- font-variant-numeric
+- tracking (letter spacing)
+- leading (line-height)
+- list style type
+- list style position
+- text alignment
 - text-color
-- text-position
-- indent
-- word-break
+- text-transform
+- text-overflow
+- text-decoration
+- text-decoration-color
+- text-decoration-style
+- text-decoration-thickness
+- text-underline-offset
+- text-indent
+- word break
+- vertical align
+- pseudo-class content
 
 #### #body behaviour
 - opacity
 
 #### #body styling
 - background (url, repeat, pos, size)
+- background-attachment
+- background-clip
 - background-color
+- background-origin
+- gradient color stops
+- mix-blend-mode
+- background blend mode
 - (svg) fill
-- (svg) stroke
+- (svg) stroke color
+- (svg) stroke width
 - border (style, width, radius)
 - border-color
+- divide (x, y)
+- divide color
+- divide-style
+- outline-width
+- outline-style
+- outline-offset
+- ring width
+- ring color
+- ring offset width
+- ring offset color
 - box-shadow
+- box-shadow-color
+
+#### #table styling
+- border-collapse
+- border-spacing
+- table-layout
+
+#### #filters
+- blur
+- brightness
+- contrast
+- drop-shadow
+- grayscale
+- hue-rotate
+- invert
+- saturate
+- sepia
+- backdrop blur
+- backdrop brightness
+- backdrop contrast
+- backdrop grayscale
+- backdrop hue rotate
+- backdrop invert
+- backdrop opacity
+- backdrop saturate
+- backdrop sepia
+
+#### #transitions & animation
 - transition (property, duration, timing function, delay)
+- animate
+
+#### #interactivity
+- accent-color
+- appearance
+- cursor
+- caret-color
+- pointer events
+- resize
+- scroll behavior
+- scroll padding (x, y)
+- scroll margin (x, y)
+- scroll snap align
+- scroll snap stop
+- scroll snap type
+- touch action
+- user select
+- will-change
+
+#### #accesiblility
+- screen readers
 
 #### #state management
-States are priority wise in the same order as they are presented on the tailwind docs, excluding the ```@media``` type prefixes https://tailwindcss.com/docs/hover-focus-and-other-states#appendix
+States are priority wise in the same order as they are presented on the [tailwind docs (states)](https://tailwindcss.com/docs/hover-focus-and-other-states#appendix), excluding the ```@media``` type prefixes.
 
-#### #media querys
-This plugin supports the default breakpoint prefixes as listed on the tailwind docs. https://tailwindcss.com/docs/responsive-design <br/>
+#### #media queries
+This plugin supports the default breakpoint prefixes as listed on the [tailwind docs for responsive design](https://tailwindcss.com/docs/responsive-design). <br/>
 Furthermore more custom prefixes are also already added. The ```orderConfig.json``` file can of course be altered to include even more custom breakpoint prefixes.
 - xs
 - sm

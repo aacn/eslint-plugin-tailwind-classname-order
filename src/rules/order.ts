@@ -50,8 +50,9 @@ function getClassPriority(className: string, iteration: number = 0): number {
   //only run on initial call
   if(iteration === 0) {
     //explicit edge case that needs to run first
-    if(className === "border") {
-      return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+    const immediateEdgeCase = checkImmediateEdgeCases(className);
+    if(immediateEdgeCase !== null) {
+      return immediateEdgeCase;
     }
 
     //check if className contains any kind of prefix and handle accordingly
@@ -165,6 +166,47 @@ function checkEdgeCases(className: string) {
   //5. edge case: check if provided classname is meant for border-with including arbitrary values
   if(new RegExp(/border-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+  }
+  //6. edge case: check if text includes arbitrary values thus it's font-size otherwise it's text-color
+  if(new RegExp(/text-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(font-size)"));
+  }
+  //7. edge case: check if outline includes arbitrary value thus it's outline-width otherwise it's outline-color
+  if(new RegExp(/outline-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(outline-width)"));
+  }
+  //8. edge case: check if ring includes arbitrary value thus makes it's ring-width otherwise it's ring-color
+  if(new RegExp(/ring-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(ring-width)"));
+  }
+  //9. edge case: check if ring-offset includes arbitrary value thus makes it's ring-offset-width otherwise it's ring-offset-color
+  if(new RegExp(/ring-offset-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(ring-offset-width)"));
+  }
+  //10. edge case: check if stroke includes arbitrary value thus makes it's stroke-width otherwise it's stroke-color
+  if(new RegExp(/stroke-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(stroke-width)"));
+  }
+  //10. edge case: check if shadow includes arbitrary value thus makes it's box-shadow otherwise it's box-shadow-color
+  if(new RegExp(/shadow-\[.*]/).test(className)) {
+    return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
+  }
+
+  return null;
+}
+
+function checkImmediateEdgeCases(className: string) {
+  if(className === "border") {
+    return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+  }
+  if(className === "outline") {
+    return orderList.priority.findIndex(elem => elem.includes("(outline-style)"));
+  }
+  if(className === "ring") {
+    return orderList.priority.findIndex(elem => elem.includes("(ring-width)"));
+  }
+  if(className === "shadow") {
+    return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
   }
 
   return null;
