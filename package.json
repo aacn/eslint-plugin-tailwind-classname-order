@@ -21,7 +21,8 @@
     "order",
     "sort"
   ],
-  "author": "Marlon Kerth",
+  "author": "AACN Software- und Systementwicklung GmbH <info@aacn.eu> (https://aacn.eu)",
+  "contributors": ["Marlon Kerth <marlon@aacn.eu> (https://aacn.eu)"],
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",

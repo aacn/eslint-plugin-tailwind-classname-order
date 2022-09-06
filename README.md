@@ -273,14 +273,28 @@ Furthermore more custom prefixes are also already added. The ```orderConfig.json
 
 You'll first need to install [ESLint](https://eslint.org/):
 
+#### With npm
 ```sh
-npm i eslint --save-dev
+npm install eslint --save-dev
 ```
 
 Next, install `eslint-plugin-tailwind-classname-order`:
 
 ```sh
-npm install eslint-plugin-tailwind-classname-order --save-dev
+npm install @aacn_org/eslint-plugin-tailwind-classname-order --save-dev
+```
+
+<br/>
+
+#### With yarn
+```sh
+yarn add -D eslint
+```
+
+Next, install `eslint-plugin-tailwind-classname-order`:
+
+```sh
+yarn add -D @aacn_org/eslint-plugin-tailwind-classname-order
 ```
 
 ## Usage
@@ -296,12 +310,14 @@ Add `tailwind-classname-order` to the plugins section of your `.eslintrc` config
 ```
 
 
-Then configure the rules you want to use under the rules section.
+Then configure the rules you want to use under the rules section.<br/>
+This includes the path to the rule file and its severity<br/>
+More about eslints severity can be found [here](https://eslint.org/docs/latest/user-guide/configuring/rules)
 
 ```json
 {
     "rules": {
-        "tailwind-classname-order/rule-name": 2
+        "tailwind-classname-order/order": 2
     }
 }
 ```
