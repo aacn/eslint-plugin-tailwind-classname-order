@@ -1,6 +1,6 @@
 {
   "name": "@aacn_org/eslint-plugin-tailwind-classname-order",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Sort tailwind classes for each elements className list by a given order-config",
   "license": "MIT",
   "repository": {

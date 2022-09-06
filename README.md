@@ -6,10 +6,11 @@
 Sort tailwind classes for each element className list by a given order-config.
 
 - [1. Features](#features)
-- [2. Currently unsupported tailwind classes](#currently-supported-tailwind-classes)
-- [3. Default order config](#default-order-config)
-- [4. Installation](#installation)
-- [5. Usage](#usage)
+- [2. Currently supported tailwind classes](#currently-supported-tailwind-classes)
+- [3. Explicitly unsupported classes](#explicitly-unsupported-classes)
+- [4. Default order config](#default-order-config)
+- [5. Installation](#installation)
+- [6. Usage](#usage)
 
 ## Features
 - [x] Order class names by config
@@ -306,7 +307,7 @@ Add `tailwind-classname-order` to the plugins section of your `.eslintrc` config
 ```json
 {
     "plugins": [
-        "tailwind-classname-order"
+        "@aacn_org/tailwind-classname-order"
     ]
 }
 ```
@@ -319,7 +320,7 @@ More about eslints severity can be found [here](https://eslint.org/docs/latest/u
 ```json
 {
     "rules": {
-        "tailwind-classname-order/order": 2
+        "@aacn_org/tailwind-classname-order/order": 2
     }
 }
 ```
