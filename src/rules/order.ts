@@ -5,7 +5,7 @@ const rule: Rule.RuleModule = {
   create: context => {
     return {
       JSXAttribute: (node: any) => {
-        if (!node.value || node.name.name !== "className" || !(typeof(node.value) === "string")) {
+        if (!node.value || node.name.name !== "className" || !(typeof(node.value.value) === "string")) {
           return;
         }
 
