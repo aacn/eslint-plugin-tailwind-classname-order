@@ -55,6 +55,9 @@ function getClassPriority(className: string, iteration: number = 0): number {
       return immediateEdgeCase;
     }
 
+    //remove potential arbitrary content that could break the plugin
+    className = cleanArbitraryContent(className);
+
     //check if className contains any kind of prefix and handle accordingly
     if(className.includes(":")) {
       return getPrefixClassPriority(className);
@@ -88,7 +91,7 @@ function getClassPriority(className: string, iteration: number = 0): number {
   if(strippedClassName === null) {
     return orderList.priority.indexOf("(predefined)");
   }
-  return getClassPriority(strippedClassName, iteration+1);
+  return getClassPriority(strippedClassName,iteration+1);
 }
 
 /**
@@ -114,26 +117,39 @@ function getPrefixClassPriority(className: string): number {
 
 /**
  * checks if the provided classname exists inside the orderConfig list
- * @param classname classname string to look for
+ * @param className classname string to look for
  * @return priority of the given classname or -1 if not found
  */
-function findTailwindClass(classname: string) {
+function findTailwindClass(className: string) {
   //add regex to prevent search from grabing classnames that include the provided term, but aren't the class that was searched for
-  const regex = new RegExp(`((?!-)( |^))${classname}(($| )(?!-))`, "gm");
+  const regex = new RegExp(`((?!-)( |^))${className}(($| )(?!-))`, "gm");
   return orderList.priority.findIndex(elem => regex.test(elem));
 }
 
 /**
  * Strips last occurence of given string from provided elem
- * @param elem string that's meant to be stripped
+ * @param className string that's meant to be stripped
  * @param at string at which the elem should be split
  * @return stripped string or null if string couldn't be split
  */
-function stripString(elem: string, at: string) {
-  if(!elem.includes(at)) {
+function stripString(className: string, at: string) {
+  if(!className.includes(at)) {
     return null;
   }
-  return elem.substr(0, elem.lastIndexOf(at));
+  return className.substr(0, className.lastIndexOf(at));
+}
+
+/**
+ * some classNames could contain arbitrary values that include ":" or "-", which could break the plugin.
+ * Therefor they'll be removed as they're not necessary for the plugin anyway
+ * @param className
+ * @return className that is potentially stripped from arbitrary content
+ */
+function cleanArbitraryContent(className: string) {
+  if(className.includes("[") && className.includes("]")) {
+    return className.replace(/\[.*]/, '\[value\]');
+  }
+  return className;
 }
 
 /**

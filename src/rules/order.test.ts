@@ -54,12 +54,16 @@ tester.run("order", rule, {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="flex text-green hover:text-green hover:disabled:text-green sm:text-base sm:hover:text-yellow lg:text-lg lg:hover:text-red" />`,
     },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="sticky flex-[1:1-10%]" />`,
+    },
   ],
   invalid: [
     {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="text-white min-w-1/2 predefinedClass flex-[1_1_10%] bg-green-500 uppercase underline sticky" />`,
-      output: `(props: props) => <button className="predefinedClass sticky flex-[1_1_10%] min-w-1/2 text-white uppercase underline bg-green-500" />`,
+      code: `(props: props) => <button className="text-white min-w-1/2 predefinedClass flex-[1:1-10%] bg-green-500 uppercase underline sticky" />`,
+      output: `(props: props) => <button className="predefinedClass sticky flex-[1:1-10%] min-w-1/2 text-white uppercase underline bg-green-500" />`,
       errors: [{ message: "tailwind class names are not in correctly defined order." }],
     },
     {
