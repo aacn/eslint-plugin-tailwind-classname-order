@@ -15,14 +15,17 @@ Sort tailwind classes for each element className list by a given order-config.
 - [x] Recognize states like hover,active,peer etc.
 - [x] Recognize stacked states properly.
 - [x] Recognize mediaquerys
+- [ ] Remove 'img' slug restriction for bg-images, by reading tailwind-config file
+- [ ] Handle className objects that are not string typed
 
-## Currently unsupported tailwind classes
-For the latest version the following tailwind classes are unsupported by the order plugin and will be handled as predefined class.
-These classes might be going to be added in a later version.
+## Currently supported tailwind classes
+For the latest version the following tailwind classes are supported by the order plugin.
+Classes that are not yet included, will be treated as predefined custom classes.
+
+https://progress-bar.dev/<thepercentage>?title=<title>
 - Background Size (when using arbitrary values)
 - Border Color (when using arbitrary values)
 - Box Shadow Color
-<br/>And a lot more...
 
 ## Default order config
 - predefined class
