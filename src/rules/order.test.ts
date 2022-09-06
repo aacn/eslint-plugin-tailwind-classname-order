@@ -30,6 +30,30 @@ tester.run("order", rule, {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-index-20" />`,
     },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green absolute top-2 bottom-4 left-10 -z-index-20" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green hover:text-green hover:uppercase disabled:color-grey" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green hover:text-green hover:disabled:text-green hover:disabled:active:text-green" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="hover:text-green hover:disabled:text-green hover:disabled:uppercase hover:disabled:bg-green hover:disabled:active:text-green" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="hover:disabled:block hover:disabled:text-green hover:disabled:uppercase hover:disabled:bg-green hover:disabled:active:text-green" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="flex text-green hover:text-green hover:disabled:text-green sm:text-base sm:hover:text-yellow lg:text-lg lg:hover:text-red" />`,
+    },
   ],
   invalid: [
     {
@@ -48,6 +72,12 @@ tester.run("order", rule, {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="text-green underline decoration-[12px] decoration-green-500" />`,
       output: `(props: props) => <button className="text-green underline decoration-green-500 decoration-[12px]" />`,
+      errors: [{ message: "tailwind class names are not in correctly defined order." }],
+    },
+    {
+      filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="flex-[1_2_3] flex-col flex items-center justify-start bg-img-name" />`,
+      output: `(props: props) => <button className="flex-[1_2_3] flex flex-col justify-start items-center bg-img-name" />`,
       errors: [{ message: "tailwind class names are not in correctly defined order." }],
     },
   ],

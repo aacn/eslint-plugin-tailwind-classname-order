@@ -40,52 +40,75 @@ const rule: Rule.RuleModule = {
 };
 
 
-function getClassPriority(className: string) {
-  //explicit edge case that needs to run first
-  if(className === "border") {
-    return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+/**
+ * querys the priority number from the config
+ * @param className string that the priority should be queried for
+ * @param iteration predefined number to keep track of the current recursion loop
+ * @return priority number of provided className string
+ */
+function getClassPriority(className: string, iteration: number = 0): number {
+  //only run on initial call
+  if(iteration === 0) {
+    //explicit edge case that needs to run first
+    if(className === "border") {
+      return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+    }
+
+    //check if className contains any kind of prefix and handle accordingly
+    if(className.includes(":")) {
+      return getPrefixClassPriority(className);
+    }
+
+    //remove potential negation className (e.g. -z-index-2 -> z-index: -2)
+    if(new RegExp(/^-.*/).test(className)) {
+      className = className.substr(1);
+    }
   }
 
-  //remove potential negation className (e.g. -z-index-2 -> z-index: -2)
-  if(new RegExp(/^-.*/).test(className)) {
-    className = className.substr(1);
-  }
-
-  //first iteration (instant find -> static class)
+  //check if current className string is listed in config
   let classPrio = findTailwindClass(className);
   if(classPrio !== -1) {
     return classPrio;
   }
 
-  //nothing found immediately -> check for edge cases
-  const edgeCase = checkEdgeCases(className);
-  if(edgeCase !== null) {
-    return edgeCase;
+  //also only run on first iteration, but after first class check
+  //this allows edge case classes like display: 'flex' to be ordered properly
+  if(iteration === 0) {
+    //nothing found immediately -> check for edge cases
+    const edgeCase = checkEdgeCases(className);
+    if(edgeCase !== null) {
+      return edgeCase;
+    }
   }
 
-  //second iteration with potentially now stripped values (e.g. w-1/2 -> w)
+  //remove last occuring "-" from string and run recursion with stripped string (e.g. w-1/2 -> w)
   let strippedClassName = stripString(className, "-");
-  //return as custom class, if no splitpoints exist
+  //return as custom class, if string couldn't be split further
   if(strippedClassName === null) {
     return orderList.priority.indexOf("(predefined)");
   }
-  classPrio = findTailwindClass(strippedClassName);
-  if(classPrio !== -1) {
-    return classPrio;
-  }
+  return getClassPriority(strippedClassName, iteration+1);
+}
 
-  //third iteration to catch potentially now stripped values (e.g. (before first split) text-green-500 -> text-green -> text
-  let doubleStrippedClassName = stripString(strippedClassName, "-");
-  if(doubleStrippedClassName === null) {
-    return orderList.priority.indexOf("(predefined)");
-  }
-  classPrio = findTailwindClass(doubleStrippedClassName);
-  if(classPrio !== -1) {
-    return classPrio;
-  }
-
-  //nothing matching found after third iteration, assume it's a predefined class
-  return orderList.priority.indexOf("(predefined)");
+/**
+ * queries the priority values for string that include prefixes (e.g. hover:)
+ * this also takes stacked prefixes into incorporation
+ * @param className string that the priority should be queried for
+ * @return priority number of provided className string
+ */
+function getPrefixClassPriority(className: string): number {
+  const splitClassName = className.split(":");
+  let amountPrio: number = splitClassName.length - 1;
+  //example: base prio (prefix) hover = 2 + prio text-green = 26 -> 2,00026 total prio
+  //first 2 decimals are reserved for 0-99 prefix prio value and the last 3 0-999 for actual class prios
+  //when stacking, the base prio is applied first (the first prefix in the string)
+  //example: hover:disabled:text-green
+  //base prio (hover) = 2,XX XXX
+  //second its determined how many prefixes exist in the given string, so by default a strings priority gets less with each added prefix
+  //amount prio (hover, disabled) = 2/100 -> 2,02 XXX
+  //third the actual class prio is added
+  //class prio (text-green) = 26/100.000 -> 2,02 026
+  return getClassPriority(splitClassName[0]) + amountPrio/100 + getClassPriority(splitClassName[splitClassName.length -1])/100000;
 }
 
 /**
@@ -94,8 +117,9 @@ function getClassPriority(className: string) {
  * @return priority of the given classname or -1 if not found
  */
 function findTailwindClass(classname: string) {
-  //add empty space to prevent search from grabing classnames that include the provided term, but aren't the class that was searched for
-  return orderList.priority.findIndex(elem => elem.includes(classname + " "));
+  //add regex to prevent search from grabing classnames that include the provided term, but aren't the class that was searched for
+  const regex = new RegExp(`((?!-)( |^))${classname}(($| )(?!-))`, "gm");
+  return orderList.priority.findIndex(elem => regex.test(elem));
 }
 
 /**

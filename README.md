@@ -1,25 +1,34 @@
 # eslint-plugin-tailwind-classname-order
 
-Sort tailwind classes for each elements className list by a given order-config
+Sort tailwind classes for each element className list by a given order-config.
+
+- [1. Features](#features)
+- [2. Currently unsupported tailwind classes](#currently-unsupported-tailwind-classes)
+- [3. Default order config](#default-order-config)
+- [4. Installation](#installation)
+- [5. Usage](#usage)
 
 ## Features
-- [x] order class names by config
-- [x] recognize predefined classes
-- [x] recognize negative valued class names
-- [ ] recognize states like hover,active,peer etc.
-- [ ] recognize mediaquerys
+- [x] Order class names by config
+- [x] Recognize predefined classes
+- [x] Recognize negative valued class names
+- [x] Recognize states like hover,active,peer etc.
+- [x] Recognize stacked states properly.
+- [x] Recognize mediaquerys
 
-## Unsupported tailwind classes
+## Currently unsupported tailwind classes
 For the latest version the following tailwind classes are unsupported by the order plugin and will be handled as predefined class.
-These classes might gonna be added in a later version.
-- Grid column  start / end
-- Grid row start / end
+These classes might be going to be added in a later version.
 - Background Size (when using arbitrary values)
 - Border Color (when using arbitrary values)
 - Box Shadow Color
+<br/>And a lot more...
 
 ## Default order config
 - predefined class
+
+#### #browser behavior
+- box-sizing
 
 #### #object reference - High priority because it refers to neighboring content
 - peer
@@ -28,49 +37,74 @@ These classes might gonna be added in a later version.
 #### #object identity, positioning (where)
 - position
 - (position) top, right, bottom, left
+- visibility
 - z-index
 
 #### #object identity, sizing (how)
-(- flex) flex width
+- (flex) flex width
+- (flex) basis
+- container
 - width
 - width-min
 - width-max
 - height
 - height-min
 - height-max
+- aspect-ratio
 
 #### #object identity, core identity (what)
 - display
 
 #### #flex identity, core flex identity (what flex)
 - (flex) direction (row/col)
-- (flex) justify-content
-- (flex) align-items
 - (flex) wrap
 
 #### #grid identity, core grid identity (what grid)
-- (grid) row settings
-- (grid) row-flow
-- (grid) col settings
-- (grid) col-flow
+- (grid) grid-cols (grid-template-columns)
+- (grid) grid-column
+- (grid) grid-rows (grid-template-rows)
+- (grid) grid-row
+- (grid) grid-flow
+- (grid) auto-cols
+- (grid) auto-rows
+- (grid) justify items
+- (grid) justify self
+- (grid) align content
 
 #### #flex/grid identity, core flex/grid identity (what flex/grid)
+- (flex / grid) justify-content
+- (flex / grid) align-items
+- (flex / grid) align self
 - (flex / grid) gap (x, y)
 
 #### #object identity, environmental behaviour
+- place items
+- place content
+- place self
 - padding x
 - padding y
 - padding (top, right, bottom, left)
 - margin-x
 - margin-y
 - margin (top, right, bottom, left)
+- space between (x, y)
+- float
+- clear
+- isolation
 
 #### #object identity modification
 - transform (x, y, rotate, scale, skew)
 
 #### #content behaviour
+- object fit
+- object position
 - overflow
+- overscroll
 - order
+- break-before
+- break-after
+- break-inside
+- box-decoration-break
 
 #### #styling - content / text related
 - whitespace
@@ -99,9 +133,22 @@ These classes might gonna be added in a later version.
 - border-color
 - box-shadow
 - transition (property, duration, timing function, delay)
-<br/><br/>
-- media query
 
+#### #state management
+States are priority wise in the same order as they are presented on the tailwind docs, excluding the ```@media``` type prefixes https://tailwindcss.com/docs/hover-focus-and-other-states#appendix
+
+#### #media querys
+This plugin supports the default breakpoint prefixes as listed on the tailwind docs. https://tailwindcss.com/docs/responsive-design <br/>
+Furthermore more custom prefixes are also already added. The ```orderConfig.json``` file can of course be altered to include even more custom breakpoint prefixes.
+- xs
+- sm
+- md
+- 2md
+- lg
+- 2lg
+- xl
+- 2xl
+- 3xl
 
 ## Installation
 
