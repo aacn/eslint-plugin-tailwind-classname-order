@@ -1,3 +1,5 @@
+![GitHub package.json version](https://img.shields.io/github/package-json/v/MarlonAACN/eslint-plugin-tailwind-classname-order?style=flat-square)
+![GitHub](https://img.shields.io/github/license/MarlonAACN/eslint-plugin-tailwind-classname-order?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/MarlonAACN/eslint-plugin-tailwind-classname-order?style=flat-square)
 # eslint-plugin-tailwind-classname-order
 
