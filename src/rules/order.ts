@@ -8,8 +8,8 @@ const rule: Rule.RuleModule = {
         if (!node.value || node.name.name !== "className" || !(typeof(node.value.value) === "string")) {
           return;
         }
-
-        const classNames: string[] = Array.from(node.value.value.split(" "));
+        let classNames: string[] = Array.from(node.value.value.split(" "));
+        classNames = sanitizeNode(classNames);
         const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
           const aPrio = getClassPriority(a);
           const bPrio = getClassPriority(b);
@@ -24,7 +24,7 @@ const rule: Rule.RuleModule = {
 
         if(sortedClassNames.join(" ") !== classNames.join(" ")) {
           context.report({
-            message: "tailwind class names are not in correctly defined order.",
+            message: "Tailwind classes aren't correctly ordered",
             node,
             fix: fixer => {
               return fixer.replaceText(node.value, `"${sortedClassNames.join(" ")}"`);
@@ -137,6 +137,22 @@ function stripString(className: string, at: string) {
     return null;
   }
   return className.substr(0, className.lastIndexOf(at));
+}
+
+/**
+ * Removes empty-string array slots and possible linebreaks
+ * @param classArr raw className array from node
+ * @return formatted array of classNames
+ */
+function sanitizeNode(classArr: string[]) {
+  classArr = classArr
+      .filter((elem:string) => {
+        return elem !== "";
+      })
+      .map((elem:string) => {
+        return elem.replace(/\r?\n|\r/g, '');
+      });
+  return classArr;
 }
 
 /**

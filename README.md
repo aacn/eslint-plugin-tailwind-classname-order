@@ -3,24 +3,30 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/MarlonAACN/eslint-plugin-tailwind-classname-order?style=flat-square)
 # eslint-plugin-tailwind-classname-order
 
-Sort tailwind classes for each element className list by a given order-config.
+This eslint plugin automatically orders the tailwind classes included in the className tags from
+each element by the provided default order list.
 
 - [1. Features](#features)
-- [2. Currently supported tailwind classes](#currently-supported-tailwind-classes)
-- [3. Explicitly unsupported classes](#explicitly-unsupported-classes)
-- [4. Default order config](#default-order-config)
-- [5. Installation](#installation)
-- [6. Usage](#usage)
+- [2. Roadmap](#roadmap)
+- [3. Currently supported tailwind classes](#currently-supported-tailwind-classes)
+- [4. Explicitly unsupported classes](#explicitly-unsupported-classes)
+- [5. Default order config](#default-order-config)
+- [6. Installation](#installation)
+- [7. Usage](#usage)
 
 ## Features
-- [x] Order class names by config
+- [x] Order tailwind classes by given config
 - [x] Recognize predefined classes
 - [x] Recognize negative valued class names
 - [x] Recognize states like hover,active,peer etc.
 - [x] Recognize stacked states properly.
 - [x] Recognize mediaquerys
-- [ ] Remove 'img' slug restriction for bg-images, by reading tailwind-config file
-- [ ] Handle className objects that are not string typed
+
+## Roadmap
+1. Remove the 'img' slug restriction for bg-images and be more flexible with custom defined values
+in general, by reading the projects ```tailwind.config.js```.
+2. Include className objects that are not string typed instead of jsut ignoring them.
+3. Make custom ordering for the user more accessible and easier.
 
 ## Currently supported tailwind classes
 For the latest version the following tailwind classes are supported by the order plugin.
@@ -43,6 +49,17 @@ Classes are categorized as seen in the tailwind documentation [here](https://tai
 ![](https://progress-bar.dev/100/?title=Interactivity)
 ![](https://progress-bar.dev/98/?title=SVG)
 ![](https://progress-bar.dev/100/?title=Accessibility)<br/>
+
+It's mentionable that in the current version it's necessary, that when setting an image as background, which is predefined
+in the tailwind config, that the name of the image needs to include 'img' in its name, so that the
+plugin is able to identity it as such.
+```sh
+# will be detected as bg-img element
+bg-MY-img-BACKGROUND
+
+# won't be detected as bg-img and instead be treated as bg-color
+bg-MY-BACKGROUND
+```
 
 ## Explicitly unsupported classes
 Some classes in tailwind have counterparts with the same name and since interpreting arbitrary values
@@ -278,27 +295,23 @@ You'll first need to install [ESLint](https://eslint.org/):
 
 #### With npm
 ```sh
+# via npm
 npm install eslint --save-dev
-```
 
-Next, install `eslint-plugin-tailwind-classname-order`:
-
-```sh
-npm install @aacn_org/eslint-plugin-tailwind-classname-order --save-dev
-```
-
-<br/>
-
-#### With yarn
-```sh
+# via yarn
 yarn add -D eslint
 ```
 
 Next, install `eslint-plugin-tailwind-classname-order`:
 
 ```sh
+# via npm
+npm install @aacn_org/eslint-plugin-tailwind-classname-order --save-dev
+
+# via yarn
 yarn add -D @aacn_org/eslint-plugin-tailwind-classname-order
 ```
+
 
 ## Usage
 

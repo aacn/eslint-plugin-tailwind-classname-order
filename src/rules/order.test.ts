@@ -64,25 +64,25 @@ tester.run("order", rule, {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="text-white min-w-1/2 predefinedClass flex-[1:1-10%] bg-green-500 uppercase underline sticky" />`,
       output: `(props: props) => <button className="predefinedClass sticky flex-[1:1-10%] min-w-1/2 text-white uppercase underline bg-green-500" />`,
-      errors: [{ message: "tailwind class names are not in correctly defined order." }],
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
     },
     {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="border-slate-50 border-solid border-x-3 border" />`,
       output: `(props: props) => <button className="border-solid border border-x-3 border-slate-50" />`,
-      errors: [{ message: "tailwind class names are not in correctly defined order." }],
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
     },
     {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="text-green underline decoration-[12px] decoration-green-500" />`,
       output: `(props: props) => <button className="text-green underline decoration-green-500 decoration-[12px]" />`,
-      errors: [{ message: "tailwind class names are not in correctly defined order." }],
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
     },
     {
       filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="flex-[1_2_3] flex-col flex items-center justify-start bg-img-name" />`,
       output: `(props: props) => <button className="flex-[1_2_3] flex flex-col justify-start items-center bg-img-name" />`,
-      errors: [{ message: "tailwind class names are not in correctly defined order." }],
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
     },
   ],
 });

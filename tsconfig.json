@@ -13,5 +13,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["src/*","src/rules/orderConfig.json"]
+  "include": ["src/**/*","src/rules/orderConfig.json"],
+  "exclude": ["tests/**/*"]
 }
