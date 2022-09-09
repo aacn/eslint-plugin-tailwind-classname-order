@@ -1,4 +1,7 @@
 # Changelog
+## [0.2.7](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.2.7) - 2022-09-08
+### Fixed
+- Fixed a bug, where the plugin couldn't interpret classNames that had the !important modifier added to it (e.g. !text-green).
 
 ## [0.2.6](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.2.6) - 2022-09-08
 ### Added

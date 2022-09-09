@@ -58,6 +58,10 @@ tester.run("order", rule, {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="sticky flex-[1:1-10%]" />`,
     },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="min-h-10px !block px-2 py-2" />`,
+    },
   ],
   invalid: [
     {

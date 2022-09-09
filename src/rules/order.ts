@@ -63,10 +63,8 @@ function getClassPriority(className: string, iteration: number = 0): number {
       return getPrefixClassPriority(className);
     }
 
-    //remove potential negation className (e.g. -z-index-2 -> z-index: -2)
-    if(new RegExp(/^-.*/).test(className)) {
-      className = className.substr(1);
-    }
+    //remove possible modifiers on the className like negativ values (-z-index-2) or !important (!block)
+    className = removeModifier(className);
   }
 
   //check if current className string is listed in config
@@ -153,6 +151,19 @@ function sanitizeNode(classArr: string[]) {
         return elem.replace(/\r?\n|\r/g, '');
       });
   return classArr;
+}
+
+/**
+ * Removes potential modifiers from className
+ * @param className
+ * @return className without any modifiers
+ */
+function removeModifier(className: string) {
+  //remove potential negation className (e.g. -z-index-2 -> z-index: -2)
+  if(new RegExp(/^-.*/).test(className)) {
+    className = className.substr(1);
+  }
+  return className.replace("!","");
 }
 
 /**
