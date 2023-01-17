@@ -12,7 +12,7 @@
     "left",
     "visible invisible",
     "z-index",
-    "(flex-width) flex-1 flex-auto flex-initial flex-none",
+    "(flex-width) flex flex-1 flex-auto flex-initial flex-none",
     "basis",
     "grow",
     "shrink",
@@ -24,7 +24,7 @@
     "min-h",
     "max-h",
     "aspect",
-    "block inline-block inline flex inline-flex table inline-table table-caption table-cell table-column table-column-group table-footer-group table-header-group table-row-group table-row flow-root grid inline-grid contents list-item hidden",
+    "block inline-block inline (display-flex) inline-flex table inline-table table-caption table-cell table-column table-column-group table-footer-group table-header-group table-row-group table-row flow-root grid inline-grid contents list-item hidden",
     "flex-row flex-row-reverse flex-col flex-col-reverse",
     "flex-wrap flex-wrap-reverse flex-nowrap",
     "grid-cols",
@@ -242,6 +242,7 @@
     "placeholder",
     "rtl",
     "ltr",
+    "___media_queries_start___",
     "xs",
     "sm",
     "md",
@@ -250,6 +251,7 @@
     "2lg",
     "xl",
     "2xl",
-    "3xl"
+    "3xl",
+    "___media_queries_end___"
   ]
 }

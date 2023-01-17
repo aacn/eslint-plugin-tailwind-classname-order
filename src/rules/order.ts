@@ -1,13 +1,32 @@
 import { Rule } from "eslint";
 import orderList from './orderConfig.json';
+import { configPathSchema } from '../util/schema';
+import { resolveTailwindConfig } from '../util/resolveTailwindConfig';
 
 const rule: Rule.RuleModule = {
+  meta: {
+    type: "layout",
+    docs: {
+      description: "Enforce a specififed order on an elements applied tailwind classes.",
+      recommended: true,
+      url: "https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md"
+    },
+    fixable: "code",
+    schema: [configPathSchema]
+  },
   create: context => {
     return {
       JSXAttribute: (node: any) => {
+        console.log(node.name);
+
         if (!node.value || node.name.name !== "className" || !(typeof(node.value.value) === "string")) {
           return;
         }
+
+        if(context.options.length > 0) {
+          resolveTailwindConfig("/tests");
+        }
+
         let classNames: string[] = Array.from(node.value.value.split(" "));
         classNames = sanitizeNode(classNames);
         const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
@@ -33,10 +52,7 @@ const rule: Rule.RuleModule = {
         }
       },
     };
-  },
-  meta: {
-    fixable: "code",
-  },
+  }
 };
 
 
@@ -185,19 +201,15 @@ function cleanArbitraryContent(className: string) {
  * @return priority value for possibly found edge case otherwise return null
  */
 function checkEdgeCases(className: string) {
-  //1. edge case: flex width includs arbitrary values (conflicts with display: flex)
-  if(new RegExp(/flex-\[.*]/).test(className)) {
-    return orderList.priority.findIndex(elem => elem.includes("(flex-width)"));
-  }
-  //2. edge case: (text)-decoration includs arbitrary values (conflicts with text-decoration-color)
+  // edge case: (text)-decoration includs arbitrary values (conflicts with text-decoration-color)
   if(new RegExp(/decoration-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(text-decoration-thickness)"));
   }
-  //3. edge case: font-weight includs arbitrary values (conflicts with font-family)
+  // edge case: font-weight includs arbitrary values (conflicts with font-family)
   if(new RegExp(/font-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(font-weight)"));
   }
-  //4. edge case: check if bg- is an image or color setting (conflicts with bg-color)
+  // edge case: check if bg- is an image or color setting (conflicts with bg-color)
   //all defined images need an 'img' slug in their naming to be identifiable!
   if(new RegExp(/^bg-.*/).test(className)) {
     if(new RegExp(/bg-\[.*]/).test(className) || className.includes("img")) {
@@ -206,31 +218,31 @@ function checkEdgeCases(className: string) {
       return orderList.priority.findIndex(elem => elem.includes("(bg-color)"));
     }
   }
-  //5. edge case: check if provided classname is meant for border-with including arbitrary values
+  // edge case: check if provided classname is meant for border-with including arbitrary values
   if(new RegExp(/border-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
   }
-  //6. edge case: check if text includes arbitrary values thus it's font-size otherwise it's text-color
+  // edge case: check if text includes arbitrary values thus it's font-size otherwise it's text-color
   if(new RegExp(/text-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(font-size)"));
   }
-  //7. edge case: check if outline includes arbitrary value thus it's outline-width otherwise it's outline-color
+  // edge case: check if outline includes arbitrary value thus it's outline-width otherwise it's outline-color
   if(new RegExp(/outline-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(outline-width)"));
   }
-  //8. edge case: check if ring includes arbitrary value thus makes it's ring-width otherwise it's ring-color
+  // edge case: check if ring includes arbitrary value thus makes it's ring-width otherwise it's ring-color
   if(new RegExp(/ring-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(ring-width)"));
   }
-  //9. edge case: check if ring-offset includes arbitrary value thus makes it's ring-offset-width otherwise it's ring-offset-color
+  // edge case: check if ring-offset includes arbitrary value thus makes it's ring-offset-width otherwise it's ring-offset-color
   if(new RegExp(/ring-offset-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(ring-offset-width)"));
   }
-  //10. edge case: check if stroke includes arbitrary value thus makes it's stroke-width otherwise it's stroke-color
+  // edge case: check if stroke includes arbitrary value thus makes it's stroke-width otherwise it's stroke-color
   if(new RegExp(/stroke-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(stroke-width)"));
   }
-  //10. edge case: check if shadow includes arbitrary value thus makes it's box-shadow otherwise it's box-shadow-color
+  // edge case: check if shadow includes arbitrary value thus makes it's box-shadow otherwise it's box-shadow-color
   if(new RegExp(/shadow-\[.*]/).test(className)) {
     return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
   }
@@ -239,20 +251,20 @@ function checkEdgeCases(className: string) {
 }
 
 function checkImmediateEdgeCases(className: string) {
-  if(className === "border") {
-    return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+  switch (className) {
+    case "flex":
+      return orderList.priority.findIndex(elem => elem.includes("(display-flex)"));
+    case "border":
+      return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
+    case "outline":
+      return orderList.priority.findIndex(elem => elem.includes("(outline-style)"));
+    case "ring":
+      return orderList.priority.findIndex(elem => elem.includes("(ring-width)"));
+    case "shadow":
+      return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
+    default:
+      return null;
   }
-  if(className === "outline") {
-    return orderList.priority.findIndex(elem => elem.includes("(outline-style)"));
-  }
-  if(className === "ring") {
-    return orderList.priority.findIndex(elem => elem.includes("(ring-width)"));
-  }
-  if(className === "shadow") {
-    return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
-  }
-
-  return null;
 }
 
 export = rule;

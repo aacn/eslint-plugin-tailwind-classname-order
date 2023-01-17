@@ -13,6 +13,7 @@ tester.run("order", rule, {
     {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="predefinedClass sticky flex-[1_2_10%] text-white uppercase bg-green-500" />`,
+      options: [{ configPath: "/tests" }]
     },
     {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
@@ -61,6 +62,14 @@ tester.run("order", rule, {
     {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="min-h-10px !block px-2 py-2" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="flex underline decoration-green-500 decoration-wavy decoration-from-font break-normal" />`,
+    },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="flex underline decoration-green-500 decoration-wavy decoration-from-font break-normal" />`,
     },
   ],
   invalid: [

@@ -1,0 +1,20 @@
+{
+	"theme": {
+		"screens": {
+			"xs": "450px",
+			"sm": "640px",
+			"md": "768px",
+			"md2": "850px",
+			"lg": "1024px",
+			"lg2": "1140px",
+			"xl": "1280px"
+		}
+	},
+	"extend": {},
+	"orderConfigNaming": {
+		"screens": [
+			"___media_queries_start___",
+			"___media_queries_end___"
+		]
+	}
+}

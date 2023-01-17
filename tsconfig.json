@@ -14,5 +14,5 @@
     "resolveJsonModule": true
   },
   "include": ["src/**/*","src/rules/orderConfig.json"],
-  "exclude": ["tests/**/*"]
+  "exclude": ["tests/**/*", "src/rules/order.test.ts"]
 }

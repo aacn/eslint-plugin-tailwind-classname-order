@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: ["rulesdir"],
   rules: {
-    "rulesdir/order": 2,
+    "rulesdir/order": ["error", "foobar"],
   },
   overrides: [
     {
