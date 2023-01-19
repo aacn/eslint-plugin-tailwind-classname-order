@@ -1,4 +1,8 @@
 # Changelog
+## [0.3.1](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.3.0) - 2023-01-19
+### Updated
+- Adjusted README
+
 ## [0.3.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.3.0) - 2023-01-19
 ### Updated
 - Removed unecessary files from lib
