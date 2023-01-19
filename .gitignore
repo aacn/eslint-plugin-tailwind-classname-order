@@ -87,7 +87,6 @@ typings/
 
 lib/
 .DS_Store
-/tests
 /.idea
 TODO.txt
 unsupported-classes.txt

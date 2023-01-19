@@ -62,6 +62,10 @@ tester.run("order", rule, {
       filename: "valid.tsx", // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="min-h-10px !block px-2 py-2" />`,
     },
+    {
+      filename: "valid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="min-h-10px !block px-2 py-2" style={tailwind('items-center pt-12 mr-2')} />`,
+    },
   ],
   invalid: [
     {
@@ -88,5 +92,23 @@ tester.run("order", rule, {
       output: `(props: props) => <button className="flex-[1_2_3] flex flex-col justify-start items-center bg-img-name" />`,
       errors: [{ message: "Tailwind classes aren't correctly ordered" }],
     },
+    {
+      filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button aria-label="yoo" style={tailwind("flex-[1_2_3] flex-col flex items-center justify-start bg-img-name")} />`,
+      output: `(props: props) => <button aria-label="yoo" style={tailwind("flex-[1_2_3] flex flex-col justify-start items-center bg-img-name")} />`,
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
+    },
+    {
+      filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button onclick={tailwind("flex-[1_2_3] flex-col flex items-center justify-start bg-img-name")} aria-label="yoo" />`,
+      output: `(props: props) => <button onclick={tailwind("flex-[1_2_3] flex flex-col justify-start items-center bg-img-name")} aria-label="yoo" />`,
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
+    },
+    {
+      filename: "invalid.tsx", // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className={"flex-[1_2_3] flex-col flex items-center justify-start bg-img-name"} />`,
+      output: `(props: props) => <button className={"flex-[1_2_3] flex flex-col justify-start items-center bg-img-name"} />`,
+      errors: [{ message: "Tailwind classes aren't correctly ordered" }],
+    }
   ],
 });

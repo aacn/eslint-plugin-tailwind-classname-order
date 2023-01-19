@@ -11,8 +11,12 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
   "include": ["src/**/*","src/rules/orderConfig.json"],
-  "exclude": ["tests/**/*"]
+  "exclude": ["src/rules/*.test.ts", "playground"]
 }
