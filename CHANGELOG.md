@@ -6,6 +6,7 @@
 ## [0.3.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.3.0) - 2023-01-19
 ### Updated
 - Removed unecessary files from lib
+- Changed package name to **@aacn.eu/eslint-plugin-tailwind-classname-order**
 ### Added
 - Added support for [tailwind-rn](https://www.npmjs.com/package/tailwind-rn)
 - Added support for expressions
