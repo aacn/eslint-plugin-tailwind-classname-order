@@ -2,13 +2,61 @@ import { Rule } from "eslint";
 import orderList from './orderConfig.json';
 
 const rule: Rule.RuleModule = {
+  meta: {
+    messages: {
+      wrongOrder: "Tailwind classes aren't correctly ordered"
+    },
+    type: "layout",
+    docs: {
+      description: "Enforce a specififed order on an elements applied tailwind classes.",
+      recommended: true,
+      url: "https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md"
+    },
+    fixable: "code",
+    schema: []
+  },
   create: context => {
     return {
       JSXAttribute: (node: any) => {
-        if (!node.value || node.name.name !== "className" || !(typeof(node.value.value) === "string")) {
+        let classNames: string[];
+        let twrn: boolean = false;
+        let _expression: boolean = false;
+        let _template: boolean = false;
+
+        if (!node.value) {
           return;
         }
-        let classNames: string[] = Array.from(node.value.value.split(" "));
+
+        // tailwind-rn support attribute=tailwind("tw-classes")
+        else if (node.value.expression?.callee?.name === 'tailwind' && node.value.expression?.arguments) {
+          twrn = true;
+          classNames = Array.from(node.value.expression?.arguments[0].value.split(" "));
+        }
+
+        // classname expression className={"tw-classes"}
+        else if (node.name.name === "className" && node.value.expression !== undefined && node.value.expression?.quasis === undefined) {
+          _expression = true;
+          classNames = Array.from(node.value.expression.value.split(" "));
+        }
+
+        // classname expression/template element className={`tw-classes ${variable}`}
+        else if (node.name.name === "className" && node.value.expression !== null && node.value.expression?.quasis) {
+          _template = true;
+          classNames = [];
+          node.value.expression.quasis.forEach((templateElem: any) => {
+            const arr: string[] = Array.from(templateElem.value.cooked.split(" "));
+            classNames.push.apply(classNames, arr);
+          });
+        }
+
+        // default tailwind className="tw-classes"
+        else if (node.name.name === "className" && typeof(node.value.value) === "string") {
+          classNames = Array.from(node.value.value.split(" "));
+        }
+        else {
+          return;
+        }
+
         classNames = sanitizeNode(classNames);
         const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
           const aPrio = getClassPriority(a);
@@ -24,21 +72,45 @@ const rule: Rule.RuleModule = {
 
         if(sortedClassNames.join(" ") !== classNames.join(" ")) {
           context.report({
-            message: "Tailwind classes aren't correctly ordered",
+            messageId: "wrongOrder",
             node,
             fix: fixer => {
-              return fixer.replaceText(node.value, `"${sortedClassNames.join(" ")}"`);
+              if (twrn) {
+                const expression = context.getSourceCode().getText(node.parent);
+                const updatedExpression = expression.replace(node.value.expression.arguments[0].value, `${sortedClassNames.join(" ")}`);
+                return fixer.replaceText(node.parent, updatedExpression);
+              }
+
+              else if (_expression) {
+                const expression = context.getSourceCode().getText(node.parent);
+                const updatedExpression = expression.replace(node.value.expression.value, `${sortedClassNames.join(" ")}`);
+                return fixer.replaceText(node.parent, updatedExpression);
+              }
+
+              else if (_template) {
+                let expression = context.getSourceCode().getText(node.parent);
+                for (let i = 1; node.value.expression.quasis.length > i; i++) {
+                  if (i === node.value.expression.quasis.length - 1) {
+                    expression = expression.replace(node.value.expression.quasis[i].value.cooked, "");
+                  } else {
+                    expression = expression.replace(node.value.expression.quasis[i].value.cooked, " ");
+                  }
+                }
+
+                expression = expression.replace(node.value.expression.quasis[0].value.cooked, `${sortedClassNames.join(" ") + " "}`);
+                return fixer.replaceText(node.parent, expression);
+              }
+
+              else {
+                return fixer.replaceText(node.value, `"${sortedClassNames.join(" ")}"`);
+              }
             }
           });
         }
       },
     };
-  },
-  meta: {
-    fixable: "code",
-  },
+  }
 };
-
 
 /**
  * querys the priority number from the config
@@ -174,7 +246,7 @@ function removeModifier(className: string) {
  */
 function cleanArbitraryContent(className: string) {
   if(className.includes("[") && className.includes("]")) {
-    return className.replace(/\[.*]/, '\[value\]');
+    return className.replace(/\[.*]/, '[value]');
   }
   return className;
 }

@@ -21,11 +21,13 @@ each element by the provided default order list.
 - [x] Recognize states like hover,active,peer etc.
 - [x] Recognize stacked states properly.
 - [x] Recognize mediaquerys
+- [x] Support for [tailwind-rn](https://www.npmjs.com/package/tailwind-rn)
+- [x] Supporting not only strings, but also expressions
 
 ## Roadmap
 1. Remove the 'img' slug restriction for bg-images and be more flexible with custom defined values
 in general, by reading the projects ```tailwind.config.js```.
-2. Include className objects that are not string typed instead of jsut ignoring them.
+2. ~~Include className objects that are not string typed instead of just ignoring them.~~
 3. Make custom ordering for the user more accessible and easier.
 
 ## Currently supported tailwind classes
@@ -306,10 +308,10 @@ Next, install `eslint-plugin-tailwind-classname-order`:
 
 ```sh
 # via npm
-npm install @aacn_org/eslint-plugin-tailwind-classname-order --save-dev
+npm install @aacn.eu/eslint-plugin-tailwind-classname-order --save-dev
 
 # via yarn
-yarn add -D @aacn_org/eslint-plugin-tailwind-classname-order
+yarn add -D @aacn.eu/eslint-plugin-tailwind-classname-order
 ```
 
 
@@ -320,7 +322,7 @@ Add `tailwind-classname-order` to the plugins section of your `.eslintrc` config
 ```json
 {
     "plugins": [
-        "@aacn_org/tailwind-classname-order"
+        "@aacn.eu/tailwind-classname-order"
     ]
 }
 ```
@@ -333,7 +335,7 @@ More about eslints severity can be found [here](https://eslint.org/docs/latest/u
 ```json
 {
     "rules": {
-        "@aacn_org/tailwind-classname-order/order": 2
+        "@aacn.eu/tailwind-classname-order/order": 2
     }
 }
 ```
