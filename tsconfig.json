@@ -15,7 +15,11 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+  },
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
   },
   "include": ["src/**/*","src/rules/orderConfig.json"],
   "exclude": ["src/rules/*.test.ts", "playground"]

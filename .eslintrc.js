@@ -11,6 +11,9 @@ module.exports = {
       jsx: true,
     }
   },
+  globals: {
+    "TCO": "writable",
+  },
   extends: [
     "eslint:recommended",
     "plugin:eslint-plugin/recommended",
@@ -31,7 +34,7 @@ module.exports = {
       { ignores: ["modules"] },
     ],
   },
-  ignorePatterns: ["playground/**/*"],
+  ignorePatterns: ["playground/**/*", "src/types/**/*", "src/rules/*.test.*"],
   settings: {
     'import/resolver': {
       node: {

@@ -1,4 +1,10 @@
 # Changelog
+## [0.4.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.0) - 2023-03-13
+### Updated
+- Refactored and modularized codebase
+### Fixed
+- Fixed a bug where the library crashed when trying to order an expression that includes a function call with multiple arguments
+
 ## [0.3.1](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.3.0) - 2023-01-19
 ### Updated
 - Adjusted README
