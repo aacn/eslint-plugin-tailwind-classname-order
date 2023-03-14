@@ -1,6 +1,6 @@
 {
   "name": "@aacn.eu/eslint-plugin-tailwind-classname-order",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Automatically orders tailwind classes included in the className tags from each element by the provided default order list.",
   "license": "MIT",
   "type": "commonjs",
@@ -33,9 +33,10 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "build": "tsc",
-    "clean-build": "rimraf lib && tsc",
+    "build": "tsc && tsc-alias",
+    "build:clean": "rimraf lib && tsc && tsc-alias",
     "test": "jest",
+    "test:watch": "jest --watch",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -55,6 +56,8 @@
     "prettier": "2.7.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.8",
+    "tsc-alias": "^1.8.3",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "4.1.3"
   },
   "engines": {
@@ -69,6 +72,9 @@
         "diagnostics": false
       }
     },
+    "roots": [
+      "<rootDir>/src"
+    ],
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
@@ -82,6 +88,9 @@
       "js",
       "ts",
       "json"
-    ]
+    ],
+    "moduleNameMapper": {
+      "@/(.*)": "<rootDir>/src/$1"
+    }
   }
 }
