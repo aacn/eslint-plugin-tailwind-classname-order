@@ -8,12 +8,12 @@ import { templateStringHandler } from '@/variants/template-string';
 const rule: Rule.RuleModule = {
   meta: {
     messages: {
-      wrongOrder: "Tailwind classes aren't correctly ordered",
+      wrongOrder: "Tailwind classes aren't ordered correctly",
     },
     type: 'layout',
     docs: {
       description:
-        'Enforce a specififed order on an elements applied tailwind classes.',
+        'Enforce a specififed order on an element\'s applied tailwind classes.',
       recommended: true,
       url: 'https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md',
     },
