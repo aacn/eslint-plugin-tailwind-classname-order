@@ -1,9 +1,9 @@
 /**
  * Removes empty-string array slots and possible linebreaks
  * @param classArr raw className array from node
- * @return formatted array of classNames
+ * @returns {Array<string>} formatted array of classNames
  */
-function sanitizeNode(classArr: string[]) {
+function sanitizeNode(classArr: string[]): string[] {
   classArr = classArr
     .filter((elem:string) => {
       return elem !== "";
@@ -14,4 +14,12 @@ function sanitizeNode(classArr: string[]) {
   return classArr;
 }
 
-export { sanitizeNode };
+function hasLeadingWhitespace(str: string): boolean {
+  return /^\s+/.test(str);
+}
+
+function hasTrailingWhitespace(str: string): boolean {
+  return /\s+$/.test(str);
+}
+
+export { sanitizeNode, hasLeadingWhitespace, hasTrailingWhitespace };

@@ -12,6 +12,7 @@ type TestVarProps = {
   className: string
 }
 
+// @ts-ignore
 tester.run('order', rule, {
   valid: [
     {
@@ -70,67 +71,97 @@ tester.run('order', rule, {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, tailwind) => <button className="min-h-10px !block px-2 py-2" style={tailwind('items-center pt-12 mr-2')} />`,
     },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={`${ 'ml-5 text-lg' } w-5 h-5 text-white` } />",
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={` ${ 'ml-5 text-lg' }w-5 h-5 text-white` } />",
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={` ${ func('ml-5 text-lg') }w-5 h-5 text-white` } />",
+    },
   ],
   invalid: [
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="text-white min-w-1/2 predefinedClass flex-[1:1-10%] bg-green-500 uppercase underline sticky" />`,
       output: `(props: props) => <button className="predefinedClass sticky flex-[1:1-10%] min-w-1/2 text-white uppercase underline bg-green-500" />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="border-slate-50 border-solid border-x-3 border" />`,
       output: `(props: props) => <button className="border-solid border border-x-3 border-slate-50" />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="text-green underline decoration-[12px] decoration-green-500" />`,
       output: `(props: props) => <button className="text-green underline decoration-green-500 decoration-[12px]" />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="flex-[1_2_3] flex-col flex items-center justify-start bg-img-name" />`,
       output: `(props: props) => <button className="flex-[1_2_3] flex flex-col justify-start items-center bg-img-name" />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, tailwind) => <button aria-label="yoo" style={tailwind("flex-[1_2_3] flex-col flex items-center justify-start bg-img-name")} />`,
       output: `(props: props, tailwind) => <button aria-label="yoo" style={tailwind("flex-[1_2_3] flex flex-col justify-start items-center bg-img-name")} />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, tailwind) => <button onclick={tailwind("flex-[1_2_3] flex-col flex items-center justify-start bg-img-name")} aria-label="yoo" />`,
       output: `(props: props, tailwind) => <button onclick={tailwind("flex-[1_2_3] flex flex-col justify-start items-center bg-img-name")} aria-label="yoo" />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className={"flex-[1_2_3] flex-col flex items-center justify-start bg-img-name"} />`,
       output: `(props: props) => <button className={"flex-[1_2_3] flex flex-col justify-start items-center bg-img-name"} />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, classNames, vars: TestVarProps) => <button className={classNames('w-full z-50 h-[14px] flex flex-col justify-center items-center select-none', vars.className)} />`,
       output: `(props: props, classNames, vars: TestVarProps) => <button className={classNames('z-50 w-full h-[14px] flex flex-col justify-center items-center select-none', vars.className)} />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, classNames, vars: TestVarProps) => <button className={classNames(vars.className, 'w-full z-50 h-[14px] flex flex-col justify-center items-center select-none')} />`,
       output: `(props: props, classNames, vars: TestVarProps) => <button className={classNames(vars.className, 'z-50 w-full h-[14px] flex flex-col justify-center items-center select-none')} />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props, func) => <button className={func(vars.className, 'h-full w-full', 'w-full z-50 h-[14px] flex flex-col justify-center items-center select-none')} />`,
       output: `(props: props, func) => <button className={func(vars.className, 'w-full h-full', 'z-50 w-full h-[14px] flex flex-col justify-center items-center select-none')} />`,
-      errors: [{ message: "Tailwind classes aren't ordered correctly" }],
+      errors: [{ messageId: "wrongOrder" }],
+    },
+    {
+      filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={`text-md ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white` } />",
+      output: "<button className={`ml-5 text-md ${ 'ml-5 text-lg' } w-5 h-5 text-white` } />",
+      errors: [{ messageId: "wrongOrder" }],
+    },
+    {
+      filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={`text-md ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white ${ 'mt-1 mr-4' } mr-2 mt-2` } />",
+      output: "<button className={`ml-5 text-md ${ 'ml-5 text-lg' } w-5 h-5 text-white ${ 'mt-1 mr-4' } mt-2 mr-2` } />",
+      errors: [{ messageId: "wrongOrder" }],
+    },
+    {
+      filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={`${ open ? 'transform rotate-180' : ''} h-5 w-5 text-white` } />",
+      output: "<button className={`${ open ? 'transform rotate-180' : ''} w-5 h-5 text-white` } />",
+      errors: [{ messageId: "wrongOrder" }],
     },
   ],
 });
