@@ -1,4 +1,8 @@
 # Changelog
+## [0.4.1](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.1) - 2023-03-19
+### Fixed
+- Fixed a bug that caused the className string inside a template string to be placed at the start of the AST.
+
 ## [0.4.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.0) - 2023-03-13
 ### Updated
 - Refactored and modularized codebase

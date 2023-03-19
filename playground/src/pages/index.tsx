@@ -4,6 +4,7 @@ function Home() {
     const secretVar = "mt-2";
     const props = {
       className: "bg-gray-200 text-gray-700",
+      open: true
     }
 
     function tailwind(className: string): CSSProperties {
@@ -26,6 +27,7 @@ function Home() {
       <h2 className={`flex px-3 mt-0 mr-5 pt-1 font-bold ${secretVar} mx-4 ${secretVar} text-3xl ${secretVar} mt-2`}></h2>
       <h2 className={classNames('z-50 w-full h-[14px] flex flex-col justify-center items-center select-none', props.className)}></h2>
       <h2 className={longCall('h-10 w-10', 'w-full h-[14px] z-50 flex flex-col justify-center items-center select-none', props.className)}></h2>
+      <h2 className={`${ props.open ? 'transform rotate-180' : ''} h-5 w-5 text-white`}></h2>
     </main>
   )
 }

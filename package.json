@@ -1,6 +1,6 @@
 {
   "name": "@aacn.eu/eslint-plugin-tailwind-classname-order",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Automatically orders tailwind classes included in the className tags from each element by the provided default order list.",
   "license": "MIT",
   "type": "commonjs",
@@ -37,6 +37,7 @@
     "build:clean": "rimraf lib && tsc && tsc-alias",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:debug": "yarn test src/rules/debug.test.ts",
     "prepare": "husky install"
   },
   "devDependencies": {
