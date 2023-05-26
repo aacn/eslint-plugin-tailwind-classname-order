@@ -18,8 +18,8 @@ tester.run('order', rule, {
   invalid: [
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
-      code: "<button className={`${ this.open ? 'transform rotate-180' : ''} h-5 w-5 text-white` } />",
-      output: "<button className={`${ this.open ? 'transform rotate-180' : ''} w-5 h-5 text-white` } />",
+      code: "<button className={`rounded-full bg-white ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
+      output: "<button className={`bg-white rounded-full ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
       errors: [{ messageId: "wrongOrder" }],
     },
   ],
