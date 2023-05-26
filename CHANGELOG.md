@@ -1,4 +1,8 @@
 # Changelog
+## [0.4.2](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.2) - 2023-05-26
+### Fixed
+- Fixed a bug, where when trying to order a template string with a `${}` variable at the end of it, causing to add `undefined` to the element.
+
 ## [0.4.1](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.1) - 2023-03-19
 ### Fixed
 - Fixed a bug that caused the className string inside a template string to be placed at the start of the AST.
@@ -7,7 +11,7 @@
 ### Updated
 - Refactored and modularized codebase
 ### Fixed
-- Fixed a bug where the library crashed when trying to order an expression that includes a function call with multiple arguments
+- Fixed a bug where the library crashed when trying to order an expression that includes a function call with multiple arguments.
 
 ## [0.3.1](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.3.0) - 2023-01-19
 ### Updated
