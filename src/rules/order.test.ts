@@ -163,5 +163,11 @@ tester.run('order', rule, {
       output: "<button className={`${ open ? 'transform rotate-180' : ''} w-5 h-5 text-white` } />",
       errors: [{ messageId: "wrongOrder" }],
     },
+    {
+      filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
+      code: "<button className={`rounded-full bg-white ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
+      output: "<button className={`bg-white rounded-full ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
+      errors: [{ messageId: "wrongOrder" }],
+    },
   ],
 });

@@ -35,7 +35,9 @@ class TemplateStringHandler implements NodeHandler {
     let classNameArguments: NestedArgumentProps[] = [];
 
     node.value.expression.quasis.forEach((templateElem: any, index: number) => {
-      if (templateElem.type === "TemplateElement") {
+      // check if template is a template element and the value of it is not empty, the empty check prevents things like this:
+      // {`bg-white ${open ? 'absolute' : null} `} -> classNameArgs = [{oi: 0, value : 'bg-white'}, {oi: 1, value : ''}]
+      if (templateElem.type === "TemplateElement" && templateElem.value.cooked.replace(/\s/g,'') !== '') {
         classNameArguments.push({ originalIndex: index, value: sanitizeNode(templateElem.value.cooked.split(' ')) });
       }
     });
