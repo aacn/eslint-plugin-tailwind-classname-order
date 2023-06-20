@@ -1,4 +1,9 @@
 # Changelog
+## [0.4.3](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.3) - 2023-06-20
+### Updated
+- Updated the order config to include newly added/missing prefixes, especially focusing on the upcoming support for `aria` tags.
+- Added missing options for gradient settings `from`, `middle`, `to`
+
 ## [0.4.2](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.2) - 2023-05-26
 ### Fixed
 - Fixed a bug, where when trying to order a template string with a `${}` variable at the end of it, causing to add `undefined` to the element.
