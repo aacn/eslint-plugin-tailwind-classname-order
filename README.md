@@ -205,7 +205,9 @@ to detect the proper class, when the value is predefined in the config.
 - background-clip
 - background-color
 - background-origin
-- gradient color stops
+- gradient color from-{color}
+- gradient color middle-{color}
+- gradient color to-{color}
 - mix-blend-mode
 - background blend mode
 - (svg) fill

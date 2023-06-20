@@ -83,6 +83,26 @@ tester.run('order', rule, {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
       code: "<button className={` ${ func('ml-5 text-lg') }w-5 h-5 text-white` } />",
     },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-index-20 md:top-4 max-md:top-6 max-rr:top-8" />`,
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 max-rr:top-8 aria-rr:top-10" />`,
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 max-rr:top-8 landscape:top-12 aria-rr:top-10" />`,
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 max-rr:top-8 supports-rr:top-12 aria-rr:top-10" />`,
+    },
+    {
+      filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 rtl:top-20 print:top-10 data-rr:top-12" />`,
+    },
   ],
   invalid: [
     {
@@ -167,6 +187,12 @@ tester.run('order', rule, {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
       code: "<button className={`rounded-full bg-white ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
       output: "<button className={`bg-white rounded-full ${open ? 'absolute -top-3.5 -right-3.5' : null} `} />",
+      errors: [{ messageId: "wrongOrder" }],
+    },
+    {
+      filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
+      code: `(props: props) => <button className="via-green-200/25 to-yellow-300/10 h-6 flex flex-row px-1.5 -space-x-2 bg-slate-100/80 bg-gradient-to-r from-blue-300/10 backdrop-blur" />`,
+      output: `(props: props) => <button className="h-6 flex flex-row px-1.5 -space-x-2 bg-slate-100/80 bg-gradient-to-r from-blue-300/10 via-green-200/25 to-yellow-300/10 backdrop-blur" />`,
       errors: [{ messageId: "wrongOrder" }],
     },
   ],
