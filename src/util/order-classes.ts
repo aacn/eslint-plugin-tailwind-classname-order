@@ -3,6 +3,7 @@ import { sanitizeNode } from "@/util/sanitize-node";
 import orderList from "@/rules/orderConfig.json";
 import { stripString } from "@/util/strip-string";
 import { OrderProps } from "@/types/OrderProps";
+import { escapeClassname } from "@/util/escape-classname";
 
 class OrderClasses {
   /**
@@ -181,8 +182,10 @@ class OrderClasses {
    * @return priority of the given classname or -1 if not found
    */
   private findTailwindClass(className: string) {
+    const escapedClassName = escapeClassname(className);
+
     //add regex to prevent search from grabing classnames that include the provided term, but aren't the class that was searched for
-    const regex = new RegExp(`((?!-)( |^))${className}(($| )(?!-))`, "gm");
+    const regex = new RegExp(`((?!-)( |^))${escapedClassName}(($| )(?!-))`, "gm");
     return orderList.priority.findIndex(elem => regex.test(elem));
   }
 

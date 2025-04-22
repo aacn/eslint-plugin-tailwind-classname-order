@@ -1,4 +1,9 @@
 # Changelog
+## [0.4.4](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.4) - 2025-04-22
+
+### Fixed
+- Fixed a bug that caused the linting to fail as a regex run into an unescaped sequence, caused by variables beeing inluced inside the className string.
+
 ## [0.4.3](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.3) - 2023-06-20
 ### Updated
 - Updated the order config to include newly added/missing prefixes, especially focusing on the upcoming support for `aria` tags.
