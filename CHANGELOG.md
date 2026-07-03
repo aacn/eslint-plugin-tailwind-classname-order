@@ -1,4 +1,26 @@
 # Changelog
+
+## Unreleased
+
+### Added
+- Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
+- Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.
+- Added parent-directory config discovery with `before` and `after` overrides, while retaining full `priority` replacement support.
+- Added a recommended ESLint flat config export.
+- Added configurable JSX attribute names through the `attributes` rule option.
+- Added expected class sequences to ordering diagnostics.
+
+### Changed
+- Updated the plugin toolchain and playground to current ESLint, TypeScript, Jest, Next.js, React, and Tailwind CSS versions.
+- Raised the minimum supported Node.js version to 20.19.
+- Migrated project linting to ESLint flat config and updated the pre-commit verification command.
+- Updated rule compatibility for current ESLint `RuleContext` and `RuleTester` APIs.
+
+### Fixed
+- Fixed arbitrary background colors such as `bg-[#fff]` being classified as background images.
+- Fixed logical inline and block sizing utilities conflicting with display utilities.
+- Fixed missing and misspelled Tailwind utility and variant groups in the order config.
+
 ## [0.4.4](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v0.4.4) - 2025-04-22
 
 ### Fixed

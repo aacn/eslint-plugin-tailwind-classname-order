@@ -10,8 +10,8 @@
     "rootDir": "./src",
     "strict": true,
     "isolatedModules": true,
-    "types": ["node", "jest"],
     "moduleResolution": "Node16",
+    "types": ["node", "jest"],
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
