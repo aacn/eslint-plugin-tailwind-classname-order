@@ -10,6 +10,7 @@
     "rootDir": "./src",
     "strict": true,
     "isolatedModules": true,
+    "types": ["node", "jest"],
     "moduleResolution": "Node16",
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -22,5 +23,5 @@
     "resolveFullPaths": true,
   },
   "include": ["src/**/*","src/rules/orderConfig.json"],
-  "exclude": ["src/rules/*.test.ts", "playground"]
+  "exclude": ["src/**/*.test.ts", "playground"]
 }

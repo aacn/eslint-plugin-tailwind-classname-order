@@ -31,6 +31,9 @@
     "Marlon Kerth <marlon@aacn.eu> (https://aacn.eu)"
   ],
   "main": "lib/index.js",
+  "bin": {
+    "tw-class-order": "lib/cli.js"
+  },
   "scripts": {
     "lint": "eslint .",
     "build": "tsc && tsc-alias",

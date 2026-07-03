@@ -20,6 +20,9 @@ export default [
       parserOptions: { project: './tsconfig.json' },
     },
     plugins: { 'eslint-plugin': eslintPlugin },
-    rules: eslintPlugin.configs.recommended.rules,
+    rules: {
+      ...eslintPlugin.configs.recommended.rules,
+      'no-undef': 'off',
+    },
   },
 ];

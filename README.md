@@ -42,7 +42,7 @@ yarn verify:all
 1. Resolve custom background images from project theme data when Tailwind offers
 a stable synchronous API.
 2. ~~Include className objects that are not string typed instead of just ignoring them.~~
-3. Make custom ordering for the user more accessible and easier.
+3. ~~Make custom ordering for the user more accessible and easier.~~
 
 ## Currently supported tailwind classes
 For the latest version the following tailwind classes are supported by the order plugin.
@@ -351,3 +351,23 @@ export default [
   },
 ];
 ```
+
+### Custom class order
+
+Generate a project config in the current directory:
+
+```sh
+npx tw-class-order
+# or
+yarn exec tw-class-order
+```
+
+This creates `tw-class-order.json` from the plugin's bundled defaults. Move,
+remove, or add entries in its `priority` array to change their sort priority;
+earlier entries sort first. The command refuses to overwrite an existing file.
+
+When ESLint runs, the plugin looks for `tw-class-order.json` in the current
+project root. A valid project config replaces the bundled order. If the file is
+absent, the bundled order is used unchanged. Invalid JSON or a `priority` value
+other than an array of strings produces an error instead of silently using a
+surprising order.

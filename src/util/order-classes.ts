@@ -1,9 +1,11 @@
 import { Rule } from "eslint";
 import { sanitizeNode } from "@/util/sanitize-node";
-import orderList from "@/rules/orderConfig.json";
+import { loadOrderConfig } from '@/util/load-order-config';
 import { stripString } from "@/util/strip-string";
 import { OrderProps } from "@/types/OrderProps";
 import { escapeClassname } from "@/util/escape-classname";
+
+const orderList = loadOrderConfig();
 
 class OrderClasses {
   /**
