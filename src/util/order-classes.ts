@@ -7,12 +7,15 @@ import { escapeClassname } from "@/util/escape-classname";
 
 class OrderClasses {
   /**
-   * querys the priority number from the config
-   * @param className string that the priority should be queried for
-   * @param iteration predefined number to keep track of the current recursion loop
-   * @return priority number of provided className string
+   * Resolves a class name to its semantic priority in the order config.
+   * @param className Class name whose priority should be resolved.
+   * @param iteration Current recursive prefix-reduction depth.
+   * @returns Priority of the provided class name.
    */
-  private getClassPriority(className: string, iteration: number = 0): number {
+  private getClassPriority(
+    className: string,
+    iteration: number = 0
+  ): number {
     //only run on initial call
     if(iteration === 0) {
       //explicit edge case that needs to run first
@@ -55,9 +58,14 @@ class OrderClasses {
     if(strippedClassName === null) {
       return orderList.priority.indexOf("(predefined)");
     }
-    return this.getClassPriority(strippedClassName,iteration+1);
+    return this.getClassPriority(strippedClassName, iteration + 1);
   }
 
+  /**
+   * Resolves ambiguous classes that must be checked before their value is stripped.
+   * @param className Original, unmodified class name.
+   * @returns Matching semantic priority, or `null` when normal lookup should continue.
+   */
   private checkImmediateEdgeCases(className: string) {
     if(className === "border") {
       return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
@@ -107,8 +115,8 @@ class OrderClasses {
       return orderList.priority.findIndex(elem => elem.includes("(font-weight)"));
     }
     //4. edge case: check if bg- is an image or color setting (conflicts with bg-color)
-    //all defined images need an 'img' slug in their naming to be identifiable!
     if(new RegExp(/^bg-.*/).test(className)) {
+      // Custom image names need an img slug because unknown bg-* names can also be colors.
       if(new RegExp(/bg-\[.*]/).test(className) || className.includes("img")) {
         return orderList.priority.findIndex(elem => elem.includes("(bg-image)"));
       } else {
@@ -205,8 +213,8 @@ class OrderClasses {
   /**
    * queries the priority values for string that include prefixes (e.g. hover:)
    * this also takes stacked prefixes into incorporation
-   * @param className string that the priority should be queried for
-   * @return priority number of provided className string
+   * @param className String whose variant and utility priorities should be queried.
+   * @returns Combined priority of the variant chain and utility.
    */
   private getPrefixClassPriority(className: string): number {
     const splitClassName = className.split(":");
@@ -225,7 +233,6 @@ class OrderClasses {
 
   order(context: Rule.RuleContext, classNames: Array<string>): OrderProps {
     classNames = sanitizeNode(classNames);
-
     const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
       const aPrio = this.getClassPriority(a);
       const bPrio = this.getClassPriority(b);
