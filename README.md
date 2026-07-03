@@ -77,7 +77,8 @@ bg-img-hero
 Without theme evaluation, an ambiguous name such as `bg-hero` could represent
 either `background-image` or `background-color` and is therefore treated as a
 color. Built-in gradients and arbitrary image values such as
-`bg-[url('/hero.jpg')]` are detected automatically.
+`bg-[url('/hero.jpg')]` are detected automatically. Arbitrary colors such as
+`bg-[#fff]` and `bg-[color:var(--brand)]` retain background-color priority.
 
 ## Explicitly unsupported classes
 Some classes in tailwind have counterparts with the same name and since interpreting arbitrary values
@@ -335,18 +336,26 @@ yarn add -D @aacn.eu/eslint-plugin-tailwind-classname-order
 
 ## Usage
 
-Add the plugin and rule to `eslint.config.mjs`:
+Use the recommended flat config in `eslint.config.mjs`:
 
 ```js
 import tailwindClassnameOrder from '@aacn.eu/eslint-plugin-tailwind-classname-order';
 
+export default [...tailwindClassnameOrder.configs.recommended];
+```
+
+By default the rule sorts `className`. Configure other JSX attributes when
+needed:
+
+```js
 export default [
+  ...tailwindClassnameOrder.configs.recommended,
   {
-    plugins: {
-      '@aacn.eu/tailwind-classname-order': tailwindClassnameOrder,
-    },
     rules: {
-      '@aacn.eu/tailwind-classname-order/order': 'warn',
+      '@aacn.eu/tailwind-classname-order/order': [
+        'warn',
+        { attributes: ['className', 'class'] },
+      ],
     },
   },
 ];
@@ -362,12 +371,33 @@ npx tw-class-order
 yarn exec tw-class-order
 ```
 
-This creates `tw-class-order.json` from the plugin's bundled defaults. Move,
-remove, or add entries in its `priority` array to change their sort priority;
-earlier entries sort first. The command refuses to overwrite an existing file.
+This creates a small `tw-class-order.json` without copying and freezing the
+bundled defaults:
 
-When ESLint runs, the plugin looks for `tw-class-order.json` in the current
-project root. A valid project config replaces the bundled order. If the file is
-absent, the bundled order is used unchanged. Invalid JSON or a `priority` value
-other than an array of strings produces an error instead of silently using a
-surprising order.
+```json
+{
+  "before": {
+    "project-card": "block"
+  },
+  "after": {
+    "project-shadow": "shadow"
+  }
+}
+```
+
+Each key is a custom class group and each value is an existing anchor in the
+default order. The example places `project-card` before the display `block`
+group and `project-shadow` after the `shadow` group. The command refuses to
+overwrite an existing file.
+
+When ESLint runs, the plugin searches from the current directory toward the
+filesystem root and uses the nearest config. If none exists, the bundled order
+is used unchanged. Invalid JSON, invalid mappings, and missing anchors produce
+an error instead of silently using a surprising order.
+
+A complete `{ "priority": [...] }` config is still supported when replacing
+the entire bundled order is intentional, but overrides continue receiving new
+built-in Tailwind groups when the package is upgraded.
+
+When the rule reports an ordering problem, the diagnostic includes the expected
+class sequence; ESLint autofix applies the same sequence.

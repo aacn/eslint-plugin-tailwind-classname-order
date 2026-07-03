@@ -54,6 +54,11 @@ class NestedExpressionHandler implements NodeHandler {
     if (unsortedArgumentExists) {
       context.report({
         messageId: 'wrongOrder',
+        data: {
+          expected: classNameArguments
+            .map(item => item.value.join(' '))
+            .join(' | '),
+        },
         node,
         fix: (fixer) => {
           let expression = context.sourceCode.getText(node.parent);

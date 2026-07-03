@@ -12,9 +12,7 @@ class SimpleExpressionHandler implements NodeHandler {
    * @returns {boolean} A boolean depending on whether the node is a simple expression or not.
    */
   validateNodeType(node: any): boolean {
-    // The nodes name matches 'className' && the node is not empty && the node doesn't include any template strings
     return (
-      node.name.name === 'className' &&
       node.value.expression !== undefined &&
       node.value.expression?.quasis === undefined
     );
@@ -35,6 +33,7 @@ class SimpleExpressionHandler implements NodeHandler {
     if (!order.isSorted) {
       context.report({
         messageId: 'wrongOrder',
+        data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
           const expression = context.sourceCode.getText(node.parent);

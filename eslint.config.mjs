@@ -19,10 +19,13 @@ export default [
       parser: tsParser,
       parserOptions: { project: './tsconfig.json' },
     },
-    plugins: { 'eslint-plugin': eslintPlugin },
     rules: {
-      ...eslintPlugin.configs.recommended.rules,
       'no-undef': 'off',
     },
+  },
+  {
+    files: ['src/rules/*.ts'],
+    plugins: { 'eslint-plugin': eslintPlugin },
+    rules: eslintPlugin.configs.recommended.rules,
   },
 ];

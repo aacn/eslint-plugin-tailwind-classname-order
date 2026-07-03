@@ -208,5 +208,22 @@ tester.run('order', rule, {
       output: `<button className="max-inline-2xl block-10 block inline-flex" />`,
       errors: [{ messageId: 'wrongOrder' }],
     },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="bg-[#fff] bg-repeat bg-[url('/hero.jpg')]" />`,
+      output: `<button className="bg-[url('/hero.jpg')] bg-repeat bg-[#fff]" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      options: [{ attributes: ['class'] }],
+      code: `<button class="text-white flex" />`,
+      output: `<button class="flex text-white" />`,
+      errors: [
+        {
+          message: "Tailwind classes aren't ordered correctly. Expected: flex text-white",
+        },
+      ],
+    },
   ],
 });

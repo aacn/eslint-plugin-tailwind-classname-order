@@ -3,4 +3,10 @@ type OrderConfig = {
   priority: Array<string>;
 };
 
-export type { OrderConfig };
+/** Optional additions positioned relative to a bundled priority entry. */
+type OrderOverrides = {
+  before?: Record<string, string>;
+  after?: Record<string, string>;
+};
+
+export type { OrderConfig, OrderOverrides };

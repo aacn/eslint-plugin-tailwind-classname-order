@@ -35,6 +35,7 @@ class TwRnHandler implements NodeHandler {
     if (!order.isSorted) {
       context.report({
         messageId: 'wrongOrder',
+        data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
           const expression = context.sourceCode.getText(node.parent);

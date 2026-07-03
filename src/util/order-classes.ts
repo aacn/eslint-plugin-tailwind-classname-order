@@ -93,9 +93,26 @@ class OrderClasses {
    */
   private cleanArbitraryContent(className: string) {
     if(className.includes("[") && className.includes("]")) {
+      const background = className.match(/(?:^|:)bg-\[(.*)]$/);
+      if(background) {
+        const type = this.isBackgroundImage(background[1]) ? 'image' : 'color';
+        return className.replace(/\[.*]/, `[${type}]`);
+      }
       return className.replace(/\[.*]/, '[value]');
     }
     return className;
+  }
+
+  /**
+   * Identifies CSS image values supported by arbitrary background utilities.
+   * Unknown arbitrary values default to colors because CSS variables are ambiguous.
+   * @param value Contents of a `bg-[...]` utility.
+   * @returns Whether the value unambiguously represents a CSS image.
+   */
+  private isBackgroundImage(value: string): boolean {
+    return /^(image:|url\(|(?:repeating-)?(?:linear|radial|conic)-gradient\(|image-set\(|cross-fade\(|element\()/i.test(
+      value.trim()
+    );
   }
 
   /**
@@ -119,7 +136,7 @@ class OrderClasses {
     //4. edge case: check if bg- is an image or color setting (conflicts with bg-color)
     if(new RegExp(/^bg-.*/).test(className)) {
       // Custom image names need an img slug because unknown bg-* names can also be colors.
-      if(new RegExp(/bg-\[.*]/).test(className) || className.includes("img")) {
+      if(className.includes('bg-[image]') || className.includes("img")) {
         return orderList.priority.findIndex(elem => elem.includes("(bg-image)"));
       } else {
         return orderList.priority.findIndex(elem => elem.includes("(bg-color)"));

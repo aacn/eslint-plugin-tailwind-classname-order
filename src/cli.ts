@@ -2,13 +2,12 @@
 
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import orderConfig from '@/rules/orderConfig.json';
 import { CONFIG_FILE } from '@/util/load-order-config';
 
 const destination = join(process.cwd(), CONFIG_FILE);
 
 try {
-  writeFileSync(destination, `${JSON.stringify(orderConfig, null, 2)}\n`, {
+  writeFileSync(destination, '{\n  "before": {},\n  "after": {}\n}\n', {
     flag: 'wx',
   });
   console.log(`Created ${CONFIG_FILE}`);
