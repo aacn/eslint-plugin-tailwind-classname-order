@@ -37,7 +37,7 @@ class TwRnHandler implements NodeHandler {
         messageId: 'wrongOrder',
         node,
         fix: (fixer) => {
-          const expression = context.getSourceCode().getText(node.parent);
+          const expression = context.sourceCode.getText(node.parent);
           const updatedExpression = expression.replace(
             node.value.expression.arguments[0].value,
             `${order.orderedClassNames.join(' ')}`

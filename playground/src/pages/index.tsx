@@ -7,8 +7,8 @@ function Home() {
       open: true
     }
 
-    function tailwind(className: string): CSSProperties {
-        return className as CSSProperties;
+    function tailwind(_className: string): CSSProperties {
+        return {};
     }
 
     function classNames(classNames: string, _props: string): string {

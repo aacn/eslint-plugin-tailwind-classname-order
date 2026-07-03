@@ -1,10 +1,11 @@
 import { RuleTester } from 'eslint';
+import * as parser from '@typescript-eslint/parser';
 import rule from './order';
 
 const tester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
-  parserOptions: {
-    jsx: true,
+  languageOptions: {
+    parser,
+    parserOptions: { ecmaFeatures: { jsx: true } },
   },
 });
 

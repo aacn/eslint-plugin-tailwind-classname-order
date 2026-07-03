@@ -24,6 +24,20 @@ each element by the provided default order list.
 - [x] Support for [tailwind-rn](https://www.npmjs.com/package/tailwind-rn)
 - [x] Supporting not only strings, but also expressions
 
+## Development
+
+Requires Node.js 20.19 or newer and Yarn 1.x.
+
+```sh
+yarn install
+yarn verify
+
+cd playground
+yarn install
+cd ..
+yarn verify:all
+```
+
 ## Roadmap
 1. Remove the 'img' slug restriction for bg-images and be more flexible with custom defined values
 in general, by reading the projects ```tailwind.config.js```.
@@ -341,5 +355,4 @@ More about eslints severity can be found [here](https://eslint.org/docs/latest/u
     }
 }
 ```
-
 

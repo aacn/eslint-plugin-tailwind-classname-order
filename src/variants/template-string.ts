@@ -63,7 +63,7 @@ class TemplateStringHandler implements NodeHandler {
         messageId: 'wrongOrder',
         node,
         fix: (fixer) => {
-          let expression = context.getSourceCode().getText(node.parent);
+          let expression = context.sourceCode.getText(node.parent);
 
           // place each ordered quasi back to into their original position
           classNameQuasis.forEach((sortedQuasi: NestedArgumentProps) => {
