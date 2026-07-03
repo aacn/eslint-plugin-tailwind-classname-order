@@ -12,10 +12,7 @@ class DefaultHandler implements NodeHandler {
    * @returns {boolean} A boolean depending on whether the node is a normal className attribute string or not.
    */
   validateNodeType(node: any): boolean {
-    // make sure the attribute of the current node refers to 'className' && the value of the attribute is a string
-    return (
-      node.name.name === 'className' && typeof node.value.value === 'string'
-    );
+    return typeof node.value.value === 'string';
   }
 
   /**
@@ -33,6 +30,7 @@ class DefaultHandler implements NodeHandler {
     if (!order.isSorted) {
       context.report({
         messageId: 'wrongOrder',
+        data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
           return fixer.replaceText(

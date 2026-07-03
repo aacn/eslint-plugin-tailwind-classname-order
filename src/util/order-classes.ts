@@ -1,18 +1,23 @@
 import { Rule } from "eslint";
 import { sanitizeNode } from "@/util/sanitize-node";
-import orderList from "@/rules/orderConfig.json";
+import { loadOrderConfig } from '@/util/load-order-config';
 import { stripString } from "@/util/strip-string";
 import { OrderProps } from "@/types/OrderProps";
 import { escapeClassname } from "@/util/escape-classname";
 
+const orderList = loadOrderConfig();
+
 class OrderClasses {
   /**
-   * querys the priority number from the config
-   * @param className string that the priority should be queried for
-   * @param iteration predefined number to keep track of the current recursion loop
-   * @return priority number of provided className string
+   * Resolves a class name to its semantic priority in the order config.
+   * @param className Class name whose priority should be resolved.
+   * @param iteration Current recursive prefix-reduction depth.
+   * @returns Priority of the provided class name.
    */
-  private getClassPriority(className: string, iteration: number = 0): number {
+  private getClassPriority(
+    className: string,
+    iteration: number = 0
+  ): number {
     //only run on initial call
     if(iteration === 0) {
       //explicit edge case that needs to run first
@@ -55,9 +60,14 @@ class OrderClasses {
     if(strippedClassName === null) {
       return orderList.priority.indexOf("(predefined)");
     }
-    return this.getClassPriority(strippedClassName,iteration+1);
+    return this.getClassPriority(strippedClassName, iteration + 1);
   }
 
+  /**
+   * Resolves ambiguous classes that must be checked before their value is stripped.
+   * @param className Original, unmodified class name.
+   * @returns Matching semantic priority, or `null` when normal lookup should continue.
+   */
   private checkImmediateEdgeCases(className: string) {
     if(className === "border") {
       return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
@@ -83,9 +93,26 @@ class OrderClasses {
    */
   private cleanArbitraryContent(className: string) {
     if(className.includes("[") && className.includes("]")) {
+      const background = className.match(/(?:^|:)bg-\[(.*)]$/);
+      if(background) {
+        const type = this.isBackgroundImage(background[1]) ? 'image' : 'color';
+        return className.replace(/\[.*]/, `[${type}]`);
+      }
       return className.replace(/\[.*]/, '[value]');
     }
     return className;
+  }
+
+  /**
+   * Identifies CSS image values supported by arbitrary background utilities.
+   * Unknown arbitrary values default to colors because CSS variables are ambiguous.
+   * @param value Contents of a `bg-[...]` utility.
+   * @returns Whether the value unambiguously represents a CSS image.
+   */
+  private isBackgroundImage(value: string): boolean {
+    return /^(image:|url\(|(?:repeating-)?(?:linear|radial|conic)-gradient\(|image-set\(|cross-fade\(|element\()/i.test(
+      value.trim()
+    );
   }
 
   /**
@@ -107,9 +134,9 @@ class OrderClasses {
       return orderList.priority.findIndex(elem => elem.includes("(font-weight)"));
     }
     //4. edge case: check if bg- is an image or color setting (conflicts with bg-color)
-    //all defined images need an 'img' slug in their naming to be identifiable!
     if(new RegExp(/^bg-.*/).test(className)) {
-      if(new RegExp(/bg-\[.*]/).test(className) || className.includes("img")) {
+      // Custom image names need an img slug because unknown bg-* names can also be colors.
+      if(className.includes('bg-[image]') || className.includes("img")) {
         return orderList.priority.findIndex(elem => elem.includes("(bg-image)"));
       } else {
         return orderList.priority.findIndex(elem => elem.includes("(bg-color)"));
@@ -143,19 +170,32 @@ class OrderClasses {
     if(new RegExp(/shadow-\[.*]/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
     }
-    //11. edge case: check if it uses the max-[...] modifier.
-    if(new RegExp(/max-\.*/).test(className)) {
+    //11. edge case: logical sizing conflicts with the inline and block display utilities.
+    if(new RegExp(/^(min-|max-)?inline-.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(inline-size)"));
+    }
+    if(new RegExp(/^(min-|max-)?block-.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(block-size)"));
+    }
+    //12. edge case: check if it uses the max-[...] modifier.
+    if(new RegExp(/^max-\[.*]/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(max-width)"));
     }
-    //12. edge case: check if it uses the supports-[...] modifier to style things based on whether a certain feature is supported in the user’s browser.
+    if(new RegExp(/^min-\[.*]/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(min-width)"));
+    }
+    if(new RegExp(/^@.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(@container-query)"));
+    }
+    //13. edge case: check if it uses the supports-[...] modifier to style things based on whether a certain feature is supported in the user’s browser.
     if(new RegExp(/supports-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(supports)"));
     }
-    //13. edge case: check if it uses the aria-[...] modifier.
+    //14. edge case: check if it uses the aria-[...] modifier.
     if(new RegExp(/aria-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(aria)"));
     }
-    //14. edge case: check if it uses the data-[...] modifier.
+    //15. edge case: check if it uses the data-[...] modifier.
     if(new RegExp(/data-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(data)"));
     }
@@ -192,8 +232,8 @@ class OrderClasses {
   /**
    * queries the priority values for string that include prefixes (e.g. hover:)
    * this also takes stacked prefixes into incorporation
-   * @param className string that the priority should be queried for
-   * @return priority number of provided className string
+   * @param className String whose variant and utility priorities should be queried.
+   * @returns Combined priority of the variant chain and utility.
    */
   private getPrefixClassPriority(className: string): number {
     const splitClassName = className.split(":");
@@ -212,7 +252,6 @@ class OrderClasses {
 
   order(context: Rule.RuleContext, classNames: Array<string>): OrderProps {
     classNames = sanitizeNode(classNames);
-
     const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
       const aPrio = this.getClassPriority(a);
       const bPrio = this.getClassPriority(b);

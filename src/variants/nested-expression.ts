@@ -54,9 +54,14 @@ class NestedExpressionHandler implements NodeHandler {
     if (unsortedArgumentExists) {
       context.report({
         messageId: 'wrongOrder',
+        data: {
+          expected: classNameArguments
+            .map(item => item.value.join(' '))
+            .join(' | '),
+        },
         node,
         fix: (fixer) => {
-          let expression = context.getSourceCode().getText(node.parent);
+          let expression = context.sourceCode.getText(node.parent);
 
           // place arguments back at their original position in the node and overwrite the unsorted node value with the now sorted one.
           classNameArguments.forEach((sortedArgument: NestedArgumentProps) => {

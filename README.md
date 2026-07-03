@@ -24,11 +24,25 @@ each element by the provided default order list.
 - [x] Support for [tailwind-rn](https://www.npmjs.com/package/tailwind-rn)
 - [x] Supporting not only strings, but also expressions
 
+## Development
+
+Requires Node.js 20.19 or newer and Yarn 1.x.
+
+```sh
+yarn install
+yarn verify
+
+cd playground
+yarn install
+cd ..
+yarn verify:all
+```
+
 ## Roadmap
-1. Remove the 'img' slug restriction for bg-images and be more flexible with custom defined values
-in general, by reading the projects ```tailwind.config.js```.
+1. Resolve custom background images from project theme data when Tailwind offers
+a stable synchronous API.
 2. ~~Include className objects that are not string typed instead of just ignoring them.~~
-3. Make custom ordering for the user more accessible and easier.
+3. ~~Make custom ordering for the user more accessible and easier.~~
 
 ## Currently supported tailwind classes
 For the latest version the following tailwind classes are supported by the order plugin.
@@ -52,16 +66,19 @@ Classes are categorized as seen in the tailwind documentation [here](https://tai
 ![](https://progress-bar.dev/98/?title=SVG)
 ![](https://progress-bar.dev/100/?title=Accessibility)<br/>
 
-It's mentionable that in the current version it's necessary, that when setting an image as background, which is predefined
-in the tailwind config, that the name of the image needs to include 'img' in its name, so that the
-plugin is able to identity it as such.
-```sh
-# will be detected as bg-img element
-bg-MY-img-BACKGROUND
+Custom background images defined in a Tailwind theme must include `img` in
+their class name so the plugin can distinguish them from custom colors:
 
-# won't be detected as bg-img and instead be treated as bg-color
-bg-MY-BACKGROUND
+```txt
+bg-home-img
+bg-img-hero
 ```
+
+Without theme evaluation, an ambiguous name such as `bg-hero` could represent
+either `background-image` or `background-color` and is therefore treated as a
+color. Built-in gradients and arbitrary image values such as
+`bg-[url('/hero.jpg')]` are detected automatically. Arbitrary colors such as
+`bg-[#fff]` and `bg-[color:var(--brand)]` retain background-color priority.
 
 ## Explicitly unsupported classes
 Some classes in tailwind have counterparts with the same name and since interpreting arbitrary values
@@ -319,27 +336,68 @@ yarn add -D @aacn.eu/eslint-plugin-tailwind-classname-order
 
 ## Usage
 
-Add `tailwind-classname-order` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Use the recommended flat config in `eslint.config.mjs`:
+
+```js
+import tailwindClassnameOrder from '@aacn.eu/eslint-plugin-tailwind-classname-order';
+
+export default [...tailwindClassnameOrder.configs.recommended];
+```
+
+By default the rule sorts `className`. Configure other JSX attributes when
+needed:
+
+```js
+export default [
+  ...tailwindClassnameOrder.configs.recommended,
+  {
+    rules: {
+      '@aacn.eu/tailwind-classname-order/order': [
+        'warn',
+        { attributes: ['className', 'class'] },
+      ],
+    },
+  },
+];
+```
+
+### Custom class order
+
+Generate a project config in the current directory:
+
+```sh
+npx tw-class-order
+# or
+yarn exec tw-class-order
+```
+
+This creates a small `tw-class-order.json` without copying and freezing the
+bundled defaults:
 
 ```json
 {
-    "plugins": [
-        "@aacn.eu/tailwind-classname-order"
-    ]
+  "before": {
+    "project-card": "block"
+  },
+  "after": {
+    "project-shadow": "shadow"
+  }
 }
 ```
 
+Each key is a custom class group and each value is an existing anchor in the
+default order. The example places `project-card` before the display `block`
+group and `project-shadow` after the `shadow` group. The command refuses to
+overwrite an existing file.
 
-Then configure the rules you want to use under the rules section.<br/>
-This includes the path to the rule file and its severity<br/>
-More about eslints severity can be found [here](https://eslint.org/docs/latest/user-guide/configuring/rules)
+When ESLint runs, the plugin searches from the current directory toward the
+filesystem root and uses the nearest config. If none exists, the bundled order
+is used unchanged. Invalid JSON, invalid mappings, and missing anchors produce
+an error instead of silently using a surprising order.
 
-```json
-{
-    "rules": {
-        "@aacn.eu/tailwind-classname-order/order": 2
-    }
-}
-```
+A complete `{ "priority": [...] }` config is still supported when replacing
+the entire bundled order is intentional, but overrides continue receiving new
+built-in Tailwind groups when the package is upgraded.
 
-
+When the rule reports an ordering problem, the diagnostic includes the expected
+class sequence; ESLint autofix applies the same sequence.

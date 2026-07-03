@@ -8,7 +8,7 @@ import { templateStringHandler } from '@/variants/template-string';
 const rule: Rule.RuleModule = {
   meta: {
     messages: {
-      wrongOrder: "Tailwind classes aren't ordered correctly",
+      wrongOrder: "Tailwind classes aren't ordered correctly. Expected: {{expected}}",
     },
     type: 'layout',
     docs: {
@@ -18,9 +18,27 @@ const rule: Rule.RuleModule = {
       url: 'https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md',
     },
     fixable: 'code',
-    schema: [],
+    defaultOptions: [{ attributes: ['className'] }],
+    schema: [
+      {
+        type: 'object',
+        description: 'Options for locating Tailwind class attributes.',
+        properties: {
+          attributes: {
+            type: 'array',
+            description: 'JSX attribute names whose string values are sorted.',
+            items: { type: 'string' },
+            minItems: 1,
+            uniqueItems: true,
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
   },
   create: (context) => {
+    const attributes = context.options[0]?.attributes ?? ['className'];
+
     return {
       JSXAttribute: (node: any) => {
         if (!node.value) {
@@ -30,6 +48,10 @@ const rule: Rule.RuleModule = {
         // tailwind-rn support for attribute=tailwind("tw-classes")
         if (twRnHandler.validateNodeType(node)) {
           return twRnHandler.fixOrder(context, node);
+        }
+
+        if(!attributes.includes(node.name.name)) {
+          return;
         }
 
         // classname expression className={"tw-classes"}

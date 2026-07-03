@@ -9,4 +9,4 @@ interface NodeHandler {
   fixOrder(context: Rule.RuleContext, node: any): void;
 }
 
-export { NodeHandler };
+export type { NodeHandler };

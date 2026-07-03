@@ -1,10 +1,11 @@
 import { RuleTester } from 'eslint';
+import * as parser from '@typescript-eslint/parser';
 import rule from './order';
 
 const tester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
-  parserOptions: {
-    jsx: true,
+  languageOptions: {
+    parser,
+    parserOptions: { ecmaFeatures: { jsx: true } },
   },
 });
 
@@ -194,6 +195,35 @@ tester.run('order', rule, {
       code: `(props: props) => <button className="via-green-200/25 to-yellow-300/10 h-6 flex flex-row px-1.5 -space-x-2 bg-slate-100/80 bg-gradient-to-r from-blue-300/10 backdrop-blur" />`,
       output: `(props: props) => <button className="h-6 flex flex-row px-1.5 -space-x-2 bg-slate-100/80 bg-gradient-to-r from-blue-300/10 via-green-200/25 to-yellow-300/10 backdrop-blur" />`,
       errors: [{ messageId: "wrongOrder" }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="zoom-125 mask-radial col-start-2 size-10 start-4 @container" />`,
+      output: `<button className="@container start-4 size-10 col-start-2 mask-radial zoom-125" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="block max-inline-2xl block-10 inline-flex" />`,
+      output: `<button className="max-inline-2xl block-10 block inline-flex" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="bg-[#fff] bg-repeat bg-[url('/hero.jpg')]" />`,
+      output: `<button className="bg-[url('/hero.jpg')] bg-repeat bg-[#fff]" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      options: [{ attributes: ['class'] }],
+      code: `<button class="text-white flex" />`,
+      output: `<button class="flex text-white" />`,
+      errors: [
+        {
+          message: "Tailwind classes aren't ordered correctly. Expected: flex text-white",
+        },
+      ],
     },
   ],
 });

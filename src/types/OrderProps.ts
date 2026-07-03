@@ -3,4 +3,4 @@ type OrderProps = {
   orderedClassNames: Array<string>;
 }
 
-export { OrderProps };
+export type { OrderProps };

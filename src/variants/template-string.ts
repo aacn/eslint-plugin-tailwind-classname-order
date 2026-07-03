@@ -18,9 +18,7 @@ class TemplateStringHandler implements NodeHandler {
    * @returns {boolean} A boolean depending on whether the node is a template string or not.
    */
   validateNodeType(node: any): boolean {
-    // node name is 'className' && a template string exists && there are values inside the template string
     return (
-      node.name.name === 'className' &&
       node.value.expression !== null &&
       node.value.expression?.quasis
     );
@@ -61,9 +59,12 @@ class TemplateStringHandler implements NodeHandler {
     if (unsortedQuasisExists) {
       context.report({
         messageId: 'wrongOrder',
+        data: {
+          expected: classNameQuasis.map(item => item.value.join(' ')).join(' | '),
+        },
         node,
         fix: (fixer) => {
-          let expression = context.getSourceCode().getText(node.parent);
+          let expression = context.sourceCode.getText(node.parent);
 
           // place each ordered quasi back to into their original position
           classNameQuasis.forEach((sortedQuasi: NestedArgumentProps) => {

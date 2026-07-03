@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "module": "commonjs",
+    "module": "Node16",
     "jsx": "react",
     "declaration": true,
     "declarationMap": true,
@@ -9,12 +9,13 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
-    "moduleResolution": "node",
+    "isolatedModules": true,
+    "types": ["node", "jest"],
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     },
   },
   "tsc-alias": {
@@ -22,5 +23,5 @@
     "resolveFullPaths": true,
   },
   "include": ["src/**/*","src/rules/orderConfig.json"],
-  "exclude": ["src/rules/*.test.ts", "playground"]
+  "exclude": ["src/**/*.test.ts", "playground"]
 }
