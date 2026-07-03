@@ -196,5 +196,17 @@ tester.run('order', rule, {
       output: `(props: props) => <button className="h-6 flex flex-row px-1.5 -space-x-2 bg-slate-100/80 bg-gradient-to-r from-blue-300/10 via-green-200/25 to-yellow-300/10 backdrop-blur" />`,
       errors: [{ messageId: "wrongOrder" }],
     },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="zoom-125 mask-radial col-start-2 size-10 start-4 @container" />`,
+      output: `<button className="@container start-4 size-10 col-start-2 mask-radial zoom-125" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="block max-inline-2xl block-10 inline-flex" />`,
+      output: `<button className="max-inline-2xl block-10 block inline-flex" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
   ],
 });

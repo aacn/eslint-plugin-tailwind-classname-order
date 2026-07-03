@@ -143,19 +143,32 @@ class OrderClasses {
     if(new RegExp(/shadow-\[.*]/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(box-shadow)"));
     }
-    //11. edge case: check if it uses the max-[...] modifier.
-    if(new RegExp(/max-\.*/).test(className)) {
+    //11. edge case: logical sizing conflicts with the inline and block display utilities.
+    if(new RegExp(/^(min-|max-)?inline-.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(inline-size)"));
+    }
+    if(new RegExp(/^(min-|max-)?block-.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(block-size)"));
+    }
+    //12. edge case: check if it uses the max-[...] modifier.
+    if(new RegExp(/^max-\[.*]/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(max-width)"));
     }
-    //12. edge case: check if it uses the supports-[...] modifier to style things based on whether a certain feature is supported in the user’s browser.
+    if(new RegExp(/^min-\[.*]/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(min-width)"));
+    }
+    if(new RegExp(/^@.*/).test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(@container-query)"));
+    }
+    //13. edge case: check if it uses the supports-[...] modifier to style things based on whether a certain feature is supported in the user’s browser.
     if(new RegExp(/supports-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(supports)"));
     }
-    //13. edge case: check if it uses the aria-[...] modifier.
+    //14. edge case: check if it uses the aria-[...] modifier.
     if(new RegExp(/aria-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(aria)"));
     }
-    //14. edge case: check if it uses the data-[...] modifier.
+    //15. edge case: check if it uses the data-[...] modifier.
     if(new RegExp(/data-\.*/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(data)"));
     }
