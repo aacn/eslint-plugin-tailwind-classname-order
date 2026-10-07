@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Added configurable class functions and tagged templates with support for static strings in arrays, conditions, logical expressions, and object keys.
 - Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
 - Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.
 - Added parent-directory config discovery with `before` and `after` overrides, while retaining full `priority` replacement support.
