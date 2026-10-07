@@ -9,11 +9,6 @@ const tester = new RuleTester({
   },
 });
 
-type TestVarProps = {
-  className: string
-}
-
-// @ts-ignore
 tester.run('order', rule, {
   valid: [
     {
@@ -34,31 +29,31 @@ tester.run('order', rule, {
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-index-20" />`,
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-20" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green absolute top-2 bottom-4 left-10 -z-index-20" />`,
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green-500 absolute top-2 bottom-4 left-10 -z-20" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green hover:text-green hover:uppercase disabled:color-grey" />`,
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green-500 hover:text-green-500 hover:uppercase disabled:text-gray-500" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green hover:text-green hover:disabled:text-green hover:disabled:active:text-green" />`,
+      code: `(props: props) => <button className="predefinedClass peer peer:flex peer:text-green-500 hover:text-green-500 hover:disabled:text-green-500 hover:disabled:active:text-green-500" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="hover:text-green hover:disabled:text-green hover:disabled:uppercase hover:disabled:bg-green hover:disabled:active:text-green" />`,
+      code: `(props: props) => <button className="hover:text-green-500 hover:disabled:text-green-500 hover:disabled:uppercase hover:disabled:bg-green-500 hover:disabled:active:text-green-500" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="hover:disabled:block hover:disabled:text-green hover:disabled:uppercase hover:disabled:bg-green hover:disabled:active:text-green" />`,
+      code: `(props: props) => <button className="hover:disabled:block hover:disabled:text-green-500 hover:disabled:uppercase hover:disabled:bg-green-500 hover:disabled:active:text-green-500" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="flex text-green hover:text-green hover:disabled:text-green sm:text-base sm:hover:text-yellow lg:text-lg lg:hover:text-red" />`,
+      code: `(props: props) => <button className="flex text-green-500 hover:text-green-500 hover:disabled:text-green-500 sm:text-base sm:hover:text-yellow-500 lg:text-lg lg:hover:text-red-500" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
@@ -66,11 +61,11 @@ tester.run('order', rule, {
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="min-h-10px !block px-2 py-2" />`,
+      code: `(props: props) => <button className="min-h-10 !block px-2 py-2" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props, tailwind) => <button className="min-h-10px !block px-2 py-2" style={tailwind('items-center pt-12 mr-2')} />`,
+      code: `(props: props, tailwind) => <button className="min-h-10 !block px-2 py-2" style={tailwind('items-center pt-12 mr-2')} />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
@@ -86,7 +81,7 @@ tester.run('order', rule, {
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
-      code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-index-20 md:top-4 max-md:top-6 max-rr:top-8" />`,
+      code: `(props: props) => <button className="predefinedClass peer absolute top-2 bottom-4 left-10 -z-20 md:top-4 max-md:top-6 max-rr:top-8" />`,
     },
     {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
@@ -168,14 +163,14 @@ tester.run('order', rule, {
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
-      code: "<button className={`text-md ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white` } />",
-      output: "<button className={`ml-5 text-md ${ 'ml-5 text-lg' } w-5 h-5 text-white` } />",
+      code: "<button className={`text-base ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white` } />",
+      output: "<button className={`ml-5 text-base ${ 'ml-5 text-lg' } w-5 h-5 text-white` } />",
       errors: [{ messageId: "wrongOrder" }],
     },
     {
       filename: 'invalid.tsx', // filename must be set to tell parser this code is tsx
-      code: "<button className={`text-md ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white ${ 'mt-1 mr-4' } mr-2 mt-2` } />",
-      output: "<button className={`ml-5 text-md ${ 'ml-5 text-lg' } w-5 h-5 text-white ${ 'mt-1 mr-4' } mt-2 mr-2` } />",
+      code: "<button className={`text-base ml-5 ${ 'ml-5 text-lg' } h-5 w-5 text-white ${ 'mt-1 mr-4' } mr-2 mt-2` } />",
+      output: "<button className={`ml-5 text-base ${ 'ml-5 text-lg' } w-5 h-5 text-white ${ 'mt-1 mr-4' } mt-2 mr-2` } />",
       errors: [{ messageId: "wrongOrder" }],
     },
     {

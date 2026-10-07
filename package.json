@@ -73,7 +73,7 @@
       "<rootDir>/src"
     ],
     "transform": {
-      "^.+\\.ts$": ["ts-jest", { "diagnostics": false }]
+      "^.+\\.ts$": ["ts-jest", { "diagnostics": true }]
     },
     "testRegex": "(src/.*\\.test)\\.ts$",
     "testPathIgnorePatterns": [
