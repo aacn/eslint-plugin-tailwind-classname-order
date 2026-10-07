@@ -225,5 +225,23 @@ tester.run('order', rule, {
         },
       ],
     },
+    {
+      filename: 'invalid.tsx',
+      code: `<div className="text-shadow-sm text-red-500 font-features-[kern] font-sans" />`,
+      output: `<div className="font-sans font-features-[kern] text-red-500 text-shadow-sm" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<div className="inset-ring-red-500 inset-shadow-red-500 shadow-xs inset-ring-2 inset-shadow-sm relative" />`,
+      output: `<div className="relative shadow-xs inset-shadow-sm inset-shadow-red-500 inset-ring-2 inset-ring-red-500" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<div className="backdrop-filter filter scroll-mbs-4 bg-position-[center] scroll-pbs-2 bg-size-[auto_100%]" />`,
+      output: `<div className="bg-position-[center] bg-size-[auto_100%] filter backdrop-filter scroll-pbs-2 scroll-mbs-4" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
   ],
 });

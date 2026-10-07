@@ -45,7 +45,8 @@ a stable synchronous API.
 3. ~~Make custom ordering for the user more accessible and easier.~~
 
 ## Currently supported tailwind classes
-For the latest version the following tailwind classes are supported by the order plugin.
+The bundled order targets Tailwind CSS 4.3.3. The following utility categories
+are supported by the order plugin.
 Classes that are not yet included, will be treated as predefined custom classes.
 Classes are categorized as seen in the tailwind documentation [here](https://tailwindcss.com/docs)
 <br/>

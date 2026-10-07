@@ -69,6 +69,12 @@ class OrderClasses {
    * @returns Matching semantic priority, or `null` when normal lookup should continue.
    */
   private checkImmediateEdgeCases(className: string) {
+    if(/^inset-shadow-(?:2xs|xs|sm|md|lg|xl|2xl|none)(?:\/.*)?$/.test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(inset-shadow)"));
+    }
+    if(/^text-shadow-(?:2xs|xs|sm|md|lg|none)(?:\/.*)?$/.test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(text-shadow)"));
+    }
     if(className === "border") {
       return orderList.priority.findIndex(elem => elem.includes("(border-width)"));
     }
@@ -121,6 +127,15 @@ class OrderClasses {
    * @return priority value for possibly found edge case otherwise return null
    */
   private checkEdgeCases(className: string) {
+    if(/^inset-shadow-/.test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(inset-shadow-color)"));
+    }
+    if(/^inset-ring-/.test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(inset-ring-color)"));
+    }
+    if(/^text-shadow-/.test(className)) {
+      return orderList.priority.findIndex(elem => elem.includes("(text-shadow-color)"));
+    }
     //1. edge case: flex width includs arbitrary values (conflicts with display: flex)
     if(new RegExp(/flex-\[.*]/).test(className)) {
       return orderList.priority.findIndex(elem => elem.includes("(flex-width)"));
