@@ -225,5 +225,17 @@ tester.run('order', rule, {
         },
       ],
     },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="hover:disabled:flex hover:focus:text-white hover:focus:block" />`,
+      output: `<button className="hover:focus:block hover:focus:text-white hover:disabled:flex" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button className="supports-[display:grid]:text-white supports-[display:grid]:flex" />`,
+      output: `<button className="supports-[display:grid]:flex supports-[display:grid]:text-white" />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
   ],
 });
