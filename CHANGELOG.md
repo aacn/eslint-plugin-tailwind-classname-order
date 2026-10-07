@@ -17,6 +17,7 @@
 - Updated rule compatibility for current ESLint `RuleContext` and `RuleTester` APIs.
 
 ### Fixed
+- Fixed stacked variant ordering and preserved colons inside arbitrary variants and values.
 - Fixed arbitrary background colors such as `bg-[#fff]` being classified as background images.
 - Fixed logical inline and block sizing utilities conflicting with display utilities.
 - Fixed missing and misspelled Tailwind utility and variant groups in the order config.
