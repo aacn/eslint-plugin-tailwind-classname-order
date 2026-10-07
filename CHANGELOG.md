@@ -17,6 +17,7 @@
 - Updated rule compatibility for current ESLint `RuleContext` and `RuleTester` APIs.
 
 ### Fixed
+- Corrected semantic classification for Tailwind CSS 4.1–4.3 shadow, filter, background, logical scroll, and font-feature utilities.
 - Fixed arbitrary background colors such as `bg-[#fff]` being classified as background images.
 - Fixed logical inline and block sizing utilities conflicting with display utilities.
 - Fixed missing and misspelled Tailwind utility and variant groups in the order config.
