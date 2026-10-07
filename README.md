@@ -344,8 +344,8 @@ import tailwindClassnameOrder from '@aacn.eu/eslint-plugin-tailwind-classname-or
 export default [...tailwindClassnameOrder.configs.recommended];
 ```
 
-By default the rule sorts `className`. Configure other JSX attributes when
-needed:
+By default the rule sorts `className`, `class`, and `class:list`. Configure a
+different JSX attribute set when needed:
 
 ```js
 export default [
