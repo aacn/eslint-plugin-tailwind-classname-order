@@ -361,6 +361,23 @@ export default [
 ];
 ```
 
+Static strings passed to `tailwind()` are also sorted by default. Configure
+other class functions or tagged templates explicitly:
+
+```js
+{
+  rules: {
+    '@aacn.eu/tailwind-classname-order/order': [
+      'warn',
+      { functions: ['clsx', 'cn', 'cva', 'tw', 'tw.style'] },
+    ],
+  },
+}
+```
+
+Literal arguments, template strings, arrays, conditional expressions, logical
+expressions, and object keys are supported.
+
 ### Custom class order
 
 Generate a project config in the current directory:

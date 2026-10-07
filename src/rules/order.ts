@@ -2,8 +2,8 @@ import { Rule } from 'eslint';
 import { defaultHandler } from '@/variants/default';
 import { nestedExpressionHandler } from '@/variants/nested-expression';
 import { simpleExpressionHandler } from '@/variants/simple-expression';
-import { twRnHandler } from '@/variants/tailwind-rn';
 import { templateStringHandler } from '@/variants/template-string';
+import { getFunctionName, sortClassValue } from '@/variants/class-function';
 
 const rule: Rule.RuleModule = {
   meta: {
@@ -18,7 +18,7 @@ const rule: Rule.RuleModule = {
       url: 'https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md',
     },
     fixable: 'code',
-    defaultOptions: [{ attributes: ['className'] }],
+    defaultOptions: [{ attributes: ['className'], functions: ['tailwind'] }],
     schema: [
       {
         type: 'object',
@@ -31,6 +31,12 @@ const rule: Rule.RuleModule = {
             minItems: 1,
             uniqueItems: true,
           },
+          functions: {
+            type: 'array',
+            description: 'Function and tag names whose static class strings are sorted.',
+            items: { type: 'string' },
+            uniqueItems: true,
+          },
         },
         additionalProperties: false,
       },
@@ -38,6 +44,7 @@ const rule: Rule.RuleModule = {
   },
   create: (context) => {
     const attributes = context.options[0]?.attributes ?? ['className'];
+    const functions = context.options[0]?.functions ?? ['tailwind'];
 
     return {
       JSXAttribute: (node: any) => {
@@ -45,12 +52,12 @@ const rule: Rule.RuleModule = {
           return;
         }
 
-        // tailwind-rn support for attribute=tailwind("tw-classes")
-        if (twRnHandler.validateNodeType(node)) {
-          return twRnHandler.fixOrder(context, node);
+        if(!attributes.includes(node.name.name)) {
+          return;
         }
 
-        if(!attributes.includes(node.name.name)) {
+        const functionName = getFunctionName(node.value.expression?.callee);
+        if(functionName && functions.includes(functionName)) {
           return;
         }
 
@@ -78,6 +85,20 @@ const rule: Rule.RuleModule = {
         } else {
           // abort refactor - node doesn't refer to a className attribute or is in a not supported format
           return;
+        }
+      },
+      CallExpression: (node: any) => {
+        const functionName = getFunctionName(node.callee);
+        if(functionName && functions.includes(functionName)) {
+          node.arguments.forEach((argument: any) =>
+            sortClassValue(context, argument)
+          );
+        }
+      },
+      TaggedTemplateExpression: (node: any) => {
+        const functionName = getFunctionName(node.tag);
+        if(functionName && functions.includes(functionName)) {
+          sortClassValue(context, node.quasi);
         }
       },
     };

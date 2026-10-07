@@ -225,5 +225,24 @@ tester.run('order', rule, {
         },
       ],
     },
+    {
+      filename: 'invalid.tsx',
+      options: [{ functions: ['cn'] }],
+      code: `const value = cn('text-white flex', condition && 'bg-white block', ['h-4 w-4'], { 'mt-2 absolute': active });`,
+      output: `const value = cn('flex text-white', condition && 'block bg-white', ['w-4 h-4'], { 'absolute mt-2': active });`,
+      errors: [
+        { messageId: 'wrongOrder' },
+        { messageId: 'wrongOrder' },
+        { messageId: 'wrongOrder' },
+        { messageId: 'wrongOrder' },
+      ],
+    },
+    {
+      filename: 'invalid.tsx',
+      options: [{ functions: ['tw.style'] }],
+      code: 'const value = tw.style`text-white flex ${active && "underline"}`;',
+      output: 'const value = tw.style`flex text-white ${active && "underline"}`;',
+      errors: [{ messageId: 'wrongOrder' }],
+    },
   ],
 });
