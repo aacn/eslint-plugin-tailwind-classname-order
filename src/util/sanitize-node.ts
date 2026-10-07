@@ -3,15 +3,8 @@
  * @param classArr raw className array from node
  * @returns {Array<string>} formatted array of classNames
  */
-function sanitizeNode(classArr: string[]): string[] {
-  classArr = classArr
-    .filter((elem:string) => {
-      return elem !== "";
-    })
-    .map((elem:string) => {
-      return elem.replace(/\r?\n|\r/g, '');
-    });
-  return classArr;
+function sanitizeNode(classArr: Array<string>): Array<string> {
+  return classArr.flatMap(elem => elem.split(/\s+/)).filter(Boolean);
 }
 
 function hasLeadingWhitespace(str: string): boolean {
