@@ -17,6 +17,7 @@
 - Updated rule compatibility for current ESLint `RuleContext` and `RuleTester` APIs.
 
 ### Fixed
+- Prevented crashes for non-string JSX values and empty `tailwind()` calls, limited autofixes to exact literal ranges, and handled all whitespace separators.
 - Fixed arbitrary background colors such as `bg-[#fff]` being classified as background images.
 - Fixed logical inline and block sizing utilities conflicting with display utilities.
 - Fixed missing and misspelled Tailwind utility and variant groups in the order config.
