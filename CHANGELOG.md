@@ -11,6 +11,7 @@
 - Added expected class sequences to ordering diagnostics.
 
 ### Changed
+- Expanded the default JSX attributes to `className`, `class`, and `class:list`.
 - Updated the plugin toolchain and playground to current ESLint, TypeScript, Jest, Next.js, React, and Tailwind CSS versions.
 - Raised the minimum supported Node.js version to 20.19.
 - Migrated project linting to ESLint flat config and updated the pre-commit verification command.
