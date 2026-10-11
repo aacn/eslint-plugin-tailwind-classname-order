@@ -216,7 +216,6 @@ tester.run('order', rule, {
     },
     {
       filename: 'invalid.tsx',
-      options: [{ attributes: ['class'] }],
       code: `<button class="text-white flex" />`,
       output: `<button class="flex text-white" />`,
       errors: [
@@ -224,6 +223,12 @@ tester.run('order', rule, {
           message: "Tailwind classes aren't ordered correctly. Expected: flex text-white",
         },
       ],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button class:list="text-white flex" />`,
+      output: `<button class:list="flex text-white" />`,
+      errors: [{ messageId: 'wrongOrder' }],
     },
   ],
 });

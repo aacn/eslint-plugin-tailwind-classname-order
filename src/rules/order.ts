@@ -18,7 +18,7 @@ const rule: Rule.RuleModule = {
       url: 'https://github.com/aacn/eslint-plugin-tailwind-classname-order/tree/HEAD/README.md',
     },
     fixable: 'code',
-    defaultOptions: [{ attributes: ['className'] }],
+    defaultOptions: [{ attributes: ['className', 'class', 'class:list'] }],
     schema: [
       {
         type: 'object',
@@ -37,7 +37,11 @@ const rule: Rule.RuleModule = {
     ],
   },
   create: (context) => {
-    const attributes = context.options[0]?.attributes ?? ['className'];
+    const attributes = context.options[0]?.attributes ?? [
+      'className',
+      'class',
+      'class:list',
+    ];
 
     return {
       JSXAttribute: (node: any) => {
@@ -50,7 +54,11 @@ const rule: Rule.RuleModule = {
           return twRnHandler.fixOrder(context, node);
         }
 
-        if(!attributes.includes(node.name.name)) {
+        const attributeName =
+          node.name.type === 'JSXNamespacedName'
+            ? `${node.name.namespace.name}:${node.name.name.name}`
+            : node.name.name;
+        if(!attributes.includes(attributeName)) {
           return;
         }
 
