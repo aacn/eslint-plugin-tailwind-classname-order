@@ -15,7 +15,8 @@ class TwRnHandler implements NodeHandler {
     // does the node has a function call which is named 'tailwind'? && does the function call contains values?
     return (
       node.value.expression?.callee?.name === 'tailwind' &&
-      node.value.expression?.arguments
+      node.value.expression.arguments?.[0]?.type === 'Literal' &&
+      typeof node.value.expression.arguments[0].value === 'string'
     );
   }
 
@@ -26,7 +27,7 @@ class TwRnHandler implements NodeHandler {
    * @returns {Array<string>} An array containing the classNames separated as strings.
    */
   classExtractor(node: any): Array<string> {
-    return Array.from(node.value.expression?.arguments[0].value.split(' '));
+    return [node.value.expression.arguments[0].value];
   }
 
   fixOrder(context: Rule.RuleContext, node: any): void {
@@ -38,12 +39,11 @@ class TwRnHandler implements NodeHandler {
         data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
-          const expression = context.sourceCode.getText(node.parent);
-          const updatedExpression = expression.replace(
-            node.value.expression.arguments[0].value,
-            `${order.orderedClassNames.join(' ')}`
+          const argument = node.value.expression.arguments[0];
+          return fixer.replaceTextRange(
+            [argument.range[0] + 1, argument.range[1] - 1],
+            order.orderedClassNames.join(' ')
           );
-          return fixer.replaceText(node.parent, updatedExpression);
         },
       });
     }

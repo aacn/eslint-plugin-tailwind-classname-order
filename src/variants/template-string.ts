@@ -36,7 +36,7 @@ class TemplateStringHandler implements NodeHandler {
       // check if template is a template element and the value of it is not empty, the empty check prevents things like this:
       // {`bg-white ${open ? 'absolute' : null} `} -> classNameArgs = [{oi: 0, value : 'bg-white'}, {oi: 1, value : ''}]
       if (templateElem.type === "TemplateElement" && templateElem.value.cooked.replace(/\s/g,'') !== '') {
-        classNameArguments.push({ originalIndex: index, value: sanitizeNode(templateElem.value.cooked.split(' ')) });
+        classNameArguments.push({ originalIndex: index, value: sanitizeNode([templateElem.value.raw]) });
       }
     });
 
@@ -64,24 +64,19 @@ class TemplateStringHandler implements NodeHandler {
         },
         node,
         fix: (fixer) => {
-          let expression = context.sourceCode.getText(node.parent);
-
-          // place each ordered quasi back to into their original position
-          classNameQuasis.forEach((sortedQuasi: NestedArgumentProps) => {
-            // Check if original quasi has whitespace at the start or end of the string, as this indicates the
-            // added whitespace for a following expression.
-            if (hasLeadingWhitespace(node.value.expression.quasis[sortedQuasi.originalIndex].value.cooked)) {
-              sortedQuasi.value[0] = ' ' + sortedQuasi.value[0];
-            }
-
-            if (hasTrailingWhitespace(node.value.expression.quasis[sortedQuasi.originalIndex].value.cooked)) {
-              sortedQuasi.value[sortedQuasi.value.length - 1] = sortedQuasi.value[sortedQuasi.value.length - 1] + ' ';
-            }
-
-            expression = expression.replace(node.value.expression.quasis[sortedQuasi.originalIndex].value.cooked, sortedQuasi.value.join(' '));
+          return classNameQuasis.map((sortedQuasi: NestedArgumentProps) => {
+            const quasi =
+              node.value.expression.quasis[sortedQuasi.originalIndex];
+            const raw = quasi.value.raw;
+            const source = context.sourceCode.getText(quasi);
+            const start = quasi.range[0] + source.indexOf(raw);
+            const value = [
+              hasLeadingWhitespace(raw) ? ' ' : '',
+              sortedQuasi.value.join(' '),
+              hasTrailingWhitespace(raw) ? ' ' : '',
+            ].join('');
+            return fixer.replaceTextRange([start, start + raw.length], value);
           });
-
-          return fixer.replaceText(node.parent, expression);
         },
       });
     }

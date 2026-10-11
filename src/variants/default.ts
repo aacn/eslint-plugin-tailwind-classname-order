@@ -21,7 +21,7 @@ class DefaultHandler implements NodeHandler {
    * @returns {Array<string>} An array containing the classNames separated as strings.
    */
   classExtractor(node: any): Array<string> {
-    return Array.from(node.value.value.split(' '));
+    return [node.value.value];
   }
 
   fixOrder(context: Rule.RuleContext, node: any): void {
@@ -33,9 +33,9 @@ class DefaultHandler implements NodeHandler {
         data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
-          return fixer.replaceText(
-            node.value,
-            `"${order.orderedClassNames.join(' ')}"`
+          return fixer.replaceTextRange(
+            [node.value.range[0] + 1, node.value.range[1] - 1],
+            order.orderedClassNames.join(' ')
           );
         },
       });

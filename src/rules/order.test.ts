@@ -101,6 +101,14 @@ tester.run('order', rule, {
       code: `(props: props) => <button className="predefinedClass peer absolute top-2 max-rr:top-8 supports-rr:top-12 aria-rr:top-10" />`,
     },
     {
+      filename: 'valid.tsx',
+      code: `<div className={123} style={tailwind()} />`,
+    },
+    {
+      filename: 'valid.tsx',
+      code: `<div className={cx(123, false, 'flex text-white')} />`,
+    },
+    {
       filename: 'valid.tsx', // filename must be set to tell parser this code is tsx
       code: `(props: props) => <button className="predefinedClass peer absolute top-2 rtl:top-20 print:top-10 data-rr:top-12" />`,
     },
@@ -224,6 +232,19 @@ tester.run('order', rule, {
           message: "Tailwind classes aren't ordered correctly. Expected: flex text-white",
         },
       ],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<button data-value="w-full z-50" className={cx("w-full z-50")} />`,
+      output: `<button data-value="w-full z-50" className={cx("z-50 w-full")} />`,
+      errors: [{ messageId: 'wrongOrder' }],
+    },
+    {
+      filename: 'invalid.tsx',
+      code: `<div className="text-white
+flex" />`,
+      output: `<div className="flex text-white" />`,
+      errors: [{ messageId: 'wrongOrder' }],
     },
   ],
 });

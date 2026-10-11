@@ -15,7 +15,7 @@ class NestedExpressionHandler implements NodeHandler {
   validateNodeType(node: any): boolean {
     // value of node has a sub call to a function && the function possesses arguments
     return (
-      node.value.expression.callee !== undefined &&
+      node.value.expression?.callee !== undefined &&
       node.value.expression.arguments?.length > 0
     );
   }
@@ -31,8 +31,8 @@ class NestedExpressionHandler implements NodeHandler {
     let classNameArguments: NestedArgumentProps[] = [];
 
     node.value.expression.arguments.forEach((argument: any, index: number) => {
-      if (argument.type === 'Literal') {
-        classNameArguments.push({ originalIndex: index, value: argument.value.split(' ') });
+      if (argument.type === 'Literal' && typeof argument.value === 'string') {
+        classNameArguments.push({ originalIndex: index, value: [argument.value] });
       }
     });
 
@@ -61,14 +61,14 @@ class NestedExpressionHandler implements NodeHandler {
         },
         node,
         fix: (fixer) => {
-          let expression = context.sourceCode.getText(node.parent);
-
-          // place arguments back at their original position in the node and overwrite the unsorted node value with the now sorted one.
-          classNameArguments.forEach((sortedArgument: NestedArgumentProps) => {
-            expression = expression.replace(node.value.expression.arguments[sortedArgument.originalIndex].value, sortedArgument.value.join(' '));
+          return classNameArguments.map((sortedArgument: NestedArgumentProps) => {
+            const argument =
+              node.value.expression.arguments[sortedArgument.originalIndex];
+            return fixer.replaceTextRange(
+              [argument.range[0] + 1, argument.range[1] - 1],
+              sortedArgument.value.join(' ')
+            );
           });
-
-          return fixer.replaceText(node.parent, expression);
         },
       });
     }

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- Prevented crashes for non-string JSX values and empty `tailwind()` calls, limited autofixes to exact literal ranges, and handled all whitespace separators.
+- Escaped class names before interpolating them into regular expressions, preventing special characters from causing lint failures.
+
+## [1.0.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v1.0.0) - 2026-07-04
+
 ### Added
 - Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
 - Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.

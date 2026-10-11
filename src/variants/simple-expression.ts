@@ -12,10 +12,7 @@ class SimpleExpressionHandler implements NodeHandler {
    * @returns {boolean} A boolean depending on whether the node is a simple expression or not.
    */
   validateNodeType(node: any): boolean {
-    return (
-      node.value.expression !== undefined &&
-      node.value.expression?.quasis === undefined
-    );
+    return typeof node.value.expression?.value === 'string';
   }
 
   /**
@@ -24,7 +21,7 @@ class SimpleExpressionHandler implements NodeHandler {
    * @returns {Array<string>} An array containing the classNames separated as strings.
    */
   classExtractor(node: any): Array<string> {
-    return Array.from(node.value.expression.value.split(' '));
+    return [node.value.expression.value];
   }
 
   fixOrder(context: Rule.RuleContext, node: any): void {
@@ -36,12 +33,13 @@ class SimpleExpressionHandler implements NodeHandler {
         data: { expected: order.orderedClassNames.join(' ') },
         node,
         fix: (fixer) => {
-          const expression = context.sourceCode.getText(node.parent);
-          const updatedExpression = expression.replace(
-            node.value.expression.value,
-            `${order.orderedClassNames.join(' ')}`
+          return fixer.replaceTextRange(
+            [
+              node.value.expression.range[0] + 1,
+              node.value.expression.range[1] - 1,
+            ],
+            order.orderedClassNames.join(' ')
           );
-          return fixer.replaceText(node.parent, updatedExpression);
         },
       });
     }
