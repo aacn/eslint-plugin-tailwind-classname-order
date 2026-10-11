@@ -29,11 +29,6 @@ class OrderClasses {
       //remove potential arbitrary content that could break the plugin
       className = this.cleanArbitraryContent(className);
 
-      //check if className contains any kind of prefix and handle accordingly
-      if(className.includes(":")) {
-        return this.getPrefixClassPriority(className);
-      }
-
       //remove possible modifiers on the className like negativ values (-z-index-2) or !important (!block)
       className = this.removeModifier(className);
     }
@@ -230,39 +225,58 @@ class OrderClasses {
   }
 
   /**
-   * queries the priority values for string that include prefixes (e.g. hover:)
-   * this also takes stacked prefixes into incorporation
-   * @param className String whose variant and utility priorities should be queried.
-   * @returns Combined priority of the variant chain and utility.
+   * Splits a class into variant and utility priorities without treating colons
+   * inside arbitrary selectors or values as separators.
+   * @param className Class name including any stacked variants.
+   * @returns Lexicographically comparable priorities for every segment.
    */
-  private getPrefixClassPriority(className: string): number {
-    const splitClassName = className.split(":");
-    let amountPrio: number = splitClassName.length - 1;
-    //example: base prio (prefix) hover = 2 + prio text-green = 26 -> 2,00026 total prio
-    //first 2 decimals are reserved for 0-99 prefix prio value and the last 3 0-999 for actual class prios
-    //when stacking, the base prio is applied first (the first prefix in the string)
-    //example: hover:disabled:text-green
-    //base prio (hover) = 2,XX XXX
-    //second its determined how many prefixes exist in the given string, so by default a strings priority gets less with each added prefix
-    //amount prio (hover, disabled) = 2/100 -> 2,02 XXX
-    //third the actual class prio is added
-    //class prio (text-green) = 26/100.000 -> 2,02 026
-    return this.getClassPriority(splitClassName[0]) + amountPrio/100 + this.getClassPriority(splitClassName[splitClassName.length -1])/100000;
+  private getClassSortKey(className: string): Array<number> {
+    const segments = [''];
+    let bracketDepth = 0;
+    let escaped = false;
+
+    for(const character of className) {
+      if(escaped) {
+        segments[segments.length - 1] += character;
+        escaped = false;
+      } else if(character === '\\') {
+        segments[segments.length - 1] += character;
+        escaped = true;
+      } else if(character === '[') {
+        bracketDepth += 1;
+        segments[segments.length - 1] += character;
+      } else if(character === ']') {
+        bracketDepth -= 1;
+        segments[segments.length - 1] += character;
+      } else if(character === ':' && bracketDepth === 0) {
+        segments.push('');
+      } else {
+        segments[segments.length - 1] += character;
+      }
+    }
+
+    return segments.map(segment => this.getClassPriority(segment));
+  }
+
+  /** Compares semantic sort keys segment by segment. */
+  private compareClassNames(a: string, b: string): number {
+    const aKey = this.getClassSortKey(a);
+    const bKey = this.getClassSortKey(b);
+    const length = Math.max(aKey.length, bKey.length);
+
+    for(let index = 0; index < length; index += 1) {
+      if(index === aKey.length) return -1;
+      if(index === bKey.length) return 1;
+      if(aKey[index] !== bKey[index]) return aKey[index] - bKey[index];
+    }
+    return 0;
   }
 
   order(context: Rule.RuleContext, classNames: Array<string>): OrderProps {
     classNames = sanitizeNode(classNames);
-    const sortedClassNames = Array.from(classNames).sort((a: string, b: string) => {
-      const aPrio = this.getClassPriority(a);
-      const bPrio = this.getClassPriority(b);
-      if(aPrio < bPrio) {
-        return -1;
-      }
-      if(aPrio > bPrio) {
-        return 1;
-      }
-      return 0;
-    });
+    const sortedClassNames = Array.from(classNames).sort((a, b) =>
+      this.compareClassNames(a, b)
+    );
 
     return {
       isSorted: sortedClassNames.join(" ") === classNames.join(" "),
