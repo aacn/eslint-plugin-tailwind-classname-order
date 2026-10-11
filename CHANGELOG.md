@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+- Corrected semantic classification for Tailwind CSS 4.1–4.3 shadow, filter, background, logical scroll, and font-feature utilities.
+
+## [1.0.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v1.0.0) - 2026-07-04
+
 ### Added
 - Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
 - Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.
