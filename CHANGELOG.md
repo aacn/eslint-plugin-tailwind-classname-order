@@ -3,6 +3,11 @@
 ## Unreleased
 
 ### Added
+- Added configurable class functions and tagged templates with support for static strings in arrays, conditions, logical expressions, and object keys.
+
+## [1.0.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v1.0.0) - 2026-07-04
+
+### Added
 - Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
 - Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.
 - Added parent-directory config discovery with `before` and `after` overrides, while retaining full `priority` replacement support.
