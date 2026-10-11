@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+- Replaced the legacy debug suite and invalid Tailwind fixtures, and enabled TypeScript diagnostics for tests.
+
+## [1.0.0](https://github.com/aacn/eslint-plugin-tailwind-classname-order/releases/tag/v1.0.0) - 2026-07-04
+
 ### Added
 - Added Tailwind CSS 4.3 utility and variant coverage to the semantic order config.
 - Added the `tw-class-order` executable for creating `tw-class-order.json` project overrides.
@@ -11,7 +16,6 @@
 - Added expected class sequences to ordering diagnostics.
 
 ### Changed
-- Replaced the legacy debug suite and invalid Tailwind fixtures, and enabled TypeScript diagnostics for tests.
 - Updated the plugin toolchain and playground to current ESLint, TypeScript, Jest, Next.js, React, and Tailwind CSS versions.
 - Raised the minimum supported Node.js version to 20.19.
 - Migrated project linting to ESLint flat config and updated the pre-commit verification command.
